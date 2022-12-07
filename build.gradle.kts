@@ -273,7 +273,7 @@ tasks.jacocoTestReport {
 tasks.withType<Checkstyle> {
 	configFile = file("./config/checkstyle/checkstyle.xml")
 }
-// The following configurations for checkstyle are needed! Without this configurations checkstyle ignores non java
+// The following configurations for checkstyle are needed! Without these configurations checkstyle ignores non java
 // files!
 tasks.checkstyleMain {
 	source = fileTree("./src/main")
