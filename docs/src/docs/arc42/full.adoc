@@ -1,7 +1,6 @@
 = Architecture documentation (arc42)
 
 include::introduction-goals/index.adoc[leveloffset=+1]
-:imagesdir: architecture-constraints
 include::architecture-constraints/index.adoc[leveloffset=+1]
 include::scope-context/index.adoc[leveloffset=+1]
 include::solution-strategy/index.adoc[leveloffset=+1]
