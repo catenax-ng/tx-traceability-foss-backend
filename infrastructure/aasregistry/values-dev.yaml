@@ -15,8 +15,8 @@ registryPostgresql:
 
 registry:
   enabled: true
-
   registry:
+    dockerConfigJson: <path:traceability-foss/data/dev/aasregistry#dockerpullsecret>
     idpIssuerUri: https://centralidp.dev.demo.catena-x.net/auth/realms/CX-Central
     host: trace-x-registry.dev.demo.catena-x.net
     ingress:

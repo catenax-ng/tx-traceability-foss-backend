@@ -5,4 +5,4 @@ metadata:
   name: dockerpullsecret
 type: kubernetes.io/dockerconfigjson
 data:
-  .dockerconfigjson: <path:traceability-foss/data/dev/aasregistry#dockerpullsecret>
+  .dockerconfigjson: {{ .Values.registry.dockerConfigJson }}
