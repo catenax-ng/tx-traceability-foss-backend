@@ -3,9 +3,6 @@ image:
 
 springprofile: dev
 
-nameOverride: "traceability-foss-backend"
-fullnameOverride: "traceability-foss-backend"
-
 ingress:
   enabled: true
   className: "nginx"
