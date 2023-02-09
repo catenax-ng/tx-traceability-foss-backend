@@ -71,6 +71,36 @@ echo -n 'CREATE ROLE trace WITH LOGIN PASSWORD 'yourPassword';\nCREATE DATABASE 
 * `datasource.password` - `trace` database password configured in `initUserDbSql` script
 * `pgAdmin4.env.password` - pgAdmin4 master password
 
+
+## Helm installation
+Add the Trace-X Backend Helm repository:
+
+
+```sh
+$ helm repo add traceability-foss-backend https://catenax-ng.github.io/tx-traceability-foss-backend
+```
+Then install the Helm chart into your cluster:
+
+```sh
+$ helm install -f your-values.yaml traceability-foss-backend traceability-foss-backend/traceability-foss-backend
+```
+
+== Deployment using ArgoCD
+
+Create a new Helm chart and use Trace-X as a dependency.
+
+```yaml
+dependencies:
+- name: traceability-foss-backend
+  alias: backend
+  version: x.x.x
+  repository: "https://catenax-ng.github.io/tx-traceability-foss-backend/"
+```
+
+Then provide your configuration as the values.yaml of that chart.
+
+Create a new application in ArgoCD and point it to your repository / Helm chart folder.
+
 ## API sample endpoints
 * Swagger UI: `http://localhost:8080/api/swagger-ui/index.html`
 * API docs: `http://localhost:8080/api/v3/api-docs`
