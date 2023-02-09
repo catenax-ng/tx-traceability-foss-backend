@@ -16,6 +16,7 @@
 
 Trace-FOSS is a system for tracking parts along the supply chain. A high level of transparency across the supplier network enables faster intervention based on
 a recorded event in the supply chain. This saves costs by seamlessly tracking parts and creates trust through clearly defined and secure data access by the companies and persons involved in the process.
+TRACE-FOSS product composes of the backend and frontend repositories, frontend repository can be found under [GitHub repository](https://github.com/catenax-ng/tx-traceability-foss-frontend).
 
 ## Getting started
 
