@@ -5,8 +5,8 @@ namespace: product-traceability-foss-pen
 
 springprofile: dev #will be set as dev
 
-nameOverride: "traceability-foss-pen-backend"
-fullnameOverride: "traceability-foss-pen-backend"
+nameOverride: "product-traceability-foss-pen-backend"
+fullnameOverride: "product-traceability-foss-pen-backend"
 
 ingress:
   enabled: true
