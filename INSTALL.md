@@ -24,6 +24,7 @@ $ cd product-traceability-foss-backend
   * `SPRING_PROFILES_ACTIVE` - with profile to be picked when starting the service. One of `[dev|int]`.
 * Start the service by invoking following command in project root directory `./gradlew bootRun`
 
+
 ## OAuth2 configuration
 Product Traceability FOSS Backend relies on properly configured OAuth2 instance. In order to work, it must be configured with proper realm, clients and roles.
 Users should have one of the following roles assigned:
@@ -40,6 +41,25 @@ In order to deploy the service following secrets needs to be provided for specif
 * `oauth2.clientSecret` - OAuth2 client registration secret credentials
 
 ### Database
+To start a database for local development, go to the docker directory and run.
+
+```sh
+docker compose up -d
+```
+
+Add the database configuration to your [application-local.yml](src/main/ressouces/application-local.yml)
+
+```yaml
+spring:
+    datasource:
+        url: jdbc:postgresql://localhost:5432/trace
+        username: postgres
+        password: docker
+    flyway:
+        clean-on-validation-error: false
+```
+Database scripts are executed with Flyway. Put the scripts at [migration](src/main/resources/db/migration)
+
 * `postgresql.secret.initUserDbSql` - database initialization script, contains username and password for databases used by the service.
 Please note that the final script should be encoded using Base64 encoding and then added to a secret. Sample command:
 ```sh
@@ -49,6 +69,21 @@ echo -n 'CREATE ROLE trace WITH LOGIN PASSWORD 'yourPassword';\nCREATE DATABASE 
 * `postgresql.auth.postgresPassword` - PostgreSQL master password
 * `datasource.password` - `trace` database password configured in `initUserDbSql` script
 * `pgAdmin4.env.password` - pgAdmin4 master password
+
+### Tests using a database
+Currently Spring tests do not initialise the database, because that takes a lot of time. It is disabled in IntegrationSpec.groovy via
+
+```java
+@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration.class,
+        DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class])
+```
+To enable it, either remove the annotation or add another configuration where these classes are explicitly included.
+
+Additionally, you need to add:
+
+```java
+@AutoConfigureEmbeddedDatabase(beanName = "dataSource")
+```
 
 ## API sample endpoints
 * Swagger UI: `http://localhost:8080/api/swagger-ui/index.html`
