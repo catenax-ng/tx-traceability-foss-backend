@@ -20,7 +20,7 @@
  ********************************************************************************/
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model;
 
-import net.minidev.json.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.eclipse.tractusx.traceability.investigations.domain.model.AffectedPart;
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 
