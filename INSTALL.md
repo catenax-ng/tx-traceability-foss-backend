@@ -70,21 +70,6 @@ echo -n 'CREATE ROLE trace WITH LOGIN PASSWORD 'yourPassword';\nCREATE DATABASE 
 * `datasource.password` - `trace` database password configured in `initUserDbSql` script
 * `pgAdmin4.env.password` - pgAdmin4 master password
 
-### Tests using a database
-Currently Spring tests do not initialise the database, because that takes a lot of time. It is disabled in IntegrationSpec.groovy via
-
-```java
-@EnableAutoConfiguration(exclude = [DataSourceAutoConfiguration.class,
-        DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class])
-```
-To enable it, either remove the annotation or add another configuration where these classes are explicitly included.
-
-Additionally, you need to add:
-
-```java
-@AutoConfigureEmbeddedDatabase(beanName = "dataSource")
-```
-
 ## API sample endpoints
 * Swagger UI: `http://localhost:8080/api/swagger-ui/index.html`
 * API docs: `http://localhost:8080/api/v3/api-docs`
