@@ -1,4 +1,5 @@
 image:
+  repository: ghcr.io/catenax-ng/tx-traceability-foss-backend
   tag: $ARGOCD_APP_REVISION
 
 nameOverride: "product-traceability-foss-test-backend"

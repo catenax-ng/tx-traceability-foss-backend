@@ -77,7 +77,7 @@ Add the Trace-X Backend Helm repository:
 
 
 ```sh
-$ helm repo add traceability-foss-backend https://catenax-ng.github.io/tx-traceability-foss-backend
+$ helm repo add traceability-foss-backend https://eclipse-tractusx.github.io/traceability-foss-backend
 ```
 Then install the Helm chart into your cluster:
 
@@ -94,7 +94,7 @@ dependencies:
 - name: traceability-foss-backend
   alias: backend
   version: x.x.x
-  repository: "https://catenax-ng.github.io/tx-traceability-foss-backend/"
+  repository: "https://eclipse-tractusx.github.io/traceability-foss-backend/"
 ```
 
 Then provide your configuration as the values.yaml of that chart.
