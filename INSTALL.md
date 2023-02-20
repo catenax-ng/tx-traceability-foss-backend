@@ -24,7 +24,6 @@ $ cd product-traceability-foss-backend
   * `SPRING_PROFILES_ACTIVE` - with profile to be picked when starting the service. One of `[dev|int]`.
 * Start the service by invoking following command in project root directory `./gradlew bootRun`
 
-
 ## OAuth2 configuration
 Product Traceability FOSS Backend relies on properly configured OAuth2 instance. In order to work, it must be configured with proper realm, clients and roles.
 Users should have one of the following roles assigned:
