@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "Dashboard")
-@RequestMapping(path = "/dashboard", produces = "application/json", consumes = "application/json")
+@RequestMapping(path = "/dashboard", produces = "application/json")
 public class DashboardController {
 
 	private final DashboardService dashboardService;

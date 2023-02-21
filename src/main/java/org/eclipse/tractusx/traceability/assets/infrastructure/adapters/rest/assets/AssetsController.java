@@ -21,6 +21,7 @@
 
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.rest.assets;
 
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -54,7 +55,7 @@ public class AssetsController {
 		this.assetFacade = assetFacade;
 	}
 
-	@Operation(operationId = "dashboard",
+	@Operation(operationId = "sync",
 		summary = "Synchronizes assets from IRS",
 		tags = {"Assets"},
 		description = "The endpoint synchronizes the assets from irs.",
@@ -67,7 +68,7 @@ public class AssetsController {
 		assetFacade.synchronizeAssetsAsync(syncAssets.globalAssetIds());
 	}
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "assets",
 		summary = "Get assets by pagination",
 		tags = {"Assets"},
 		description = "The endpoint returns a paged result of assets.",
@@ -81,7 +82,7 @@ public class AssetsController {
 	}
 
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "supplierAssets",
 		summary = "Get supplier assets by pagination",
 		tags = {"Assets"},
 		description = "The endpoint returns a paged result of supplier assets.",
@@ -94,7 +95,7 @@ public class AssetsController {
 		return assetRepository.getSupplierAssets(pageable);
 	}
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "ownAssets",
 		summary = "Get own assets by pagination",
 		tags = {"Assets"},
 		description = "The endpoint returns a paged result of own assets.",
@@ -107,7 +108,7 @@ public class AssetsController {
 		return assetRepository.getOwnAssets(pageable);
 	}
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "assetsCountryMap",
 		summary = "Get map of assets",
 		tags = {"Assets"},
 		description = "The endpoint returns a map for assets consumed by the map.",
@@ -121,7 +122,7 @@ public class AssetsController {
 	}
 
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "asset",
 		summary = "Get asset by id",
 		tags = {"Assets"},
 		description = "The endpoint returns an asset filtered by id .",
@@ -136,7 +137,7 @@ public class AssetsController {
 	}
 
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "asset",
 		summary = "Get asset by child id",
 		tags = {"Assets"},
 		description = "The endpoint returns an asset filtered by child id.",
@@ -150,7 +151,7 @@ public class AssetsController {
 		return assetRepository.getAssetByChildId(assetId, childId);
 	}
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "updateAsset",
 		summary = "Updates asset",
 		tags = {"Assets"},
 		description = "The endpoint updates asset by provided quality type.",
@@ -164,7 +165,7 @@ public class AssetsController {
 		return assetFacade.updateAsset(assetId, updateAsset);
 	}
 
-	@Operation(operationId = "Assets",
+	@Operation(operationId = "getDetailInformation",
 		summary = "Searches for assets by ids.",
 		tags = {"Assets"},
 		description = "The endpoint searchs for assets by id and returns a list of them.",
