@@ -21,6 +21,7 @@
 
 package org.eclipse.tractusx.traceability.investigations.adapters.rest;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eclipse.tractusx.traceability.common.model.PageResult;
 import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
 import org.eclipse.tractusx.traceability.investigations.adapters.rest.model.CloseInvestigationRequest;
@@ -53,6 +54,7 @@ import static org.eclipse.tractusx.traceability.investigations.adapters.rest.val
 @RestController
 @RequestMapping("/investigations")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_USER')")
+@Tag(name = "Investigations")
 public class InvestigationsController {
 
 	private final InvestigationsReadService investigationsReadService;

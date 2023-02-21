@@ -20,6 +20,9 @@
  ********************************************************************************/
 package org.eclipse.tractusx.traceability.infrastructure.edc.notificationcontract.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eclipse.tractusx.traceability.infrastructure.edc.notificationcontract.service.EdcNotificationContractService;
 import org.eclipse.tractusx.traceability.infrastructure.edc.notificationcontract.controller.model.CreateNotificationContractRequest;
 import org.eclipse.tractusx.traceability.infrastructure.edc.notificationcontract.controller.model.CreateNotificationContractResponse;
@@ -38,6 +41,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/edc/notification")
 @PreAuthorize("hasAnyRole('ROLE_SUPERVISOR')")
+@Tag(name = "Notifications")
 public class EdcNotificationContractController {
 
 	private final EdcNotificationContractService edcNotificationContractService;
@@ -48,6 +52,11 @@ public class EdcNotificationContractController {
 
 	@PostMapping("/contract")
 	@ResponseStatus(HttpStatus.CREATED)
+	@Operation(operationId = "dashboard",
+		summary = "Returns dashboard related data",
+		tags = { "Notifications" },
+		description = "The endpoint can return limited data based on the user role",
+		security = @SecurityRequirement(name = "oAuth2", scopes = "profile email"))
 	public CreateNotificationContractResponse createNotificationContract(@Valid @RequestBody CreateNotificationContractRequest request) {
 		return edcNotificationContractService.handle(request);
 	}
