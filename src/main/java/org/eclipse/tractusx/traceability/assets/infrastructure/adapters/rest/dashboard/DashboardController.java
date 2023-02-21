@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.ws.rs.Produces;
 import org.eclipse.tractusx.traceability.assets.domain.model.Dashboard;
 import org.eclipse.tractusx.traceability.assets.domain.service.DashboardService;
 import org.eclipse.tractusx.traceability.common.security.InjectedJwtAuthentication;
@@ -37,11 +36,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
-@RequestMapping
 @Tag(name = "Dashboard")
+@RequestMapping(path = "/dashboard", produces = "application/json", consumes = "application/json")
 public class DashboardController {
 
 	private final DashboardService dashboardService;
@@ -50,23 +47,16 @@ public class DashboardController {
 		this.dashboardService = dashboardService;
 	}
 
-	@GetMapping("/dashboard")
-	@Produces("application/json")
+	@GetMapping("/")
 	@Operation(operationId = "dashboard",
 		summary = "Returns dashboard related data",
 		tags = {"Dashboard"},
 		description = "The endpoint can return limited data based on the user role",
 		security = @SecurityRequirement(name = "oAuth2", scopes = "profile email"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Returns dashboard data",
-		content = {@Content(mediaType = APPLICATION_JSON_VALUE,
-			schema = @Schema(implementation = Dashboard.class))
-		}),
-		@ApiResponse(responseCode = "401", description = "Authorization failed.",
-			content = {@Content(mediaType = APPLICATION_JSON_VALUE)
-			}),
-		@ApiResponse(responseCode = "403", description = "Forbidden.",
-			content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
-	})
+		content = {@Content(schema = @Schema(implementation = Dashboard.class))}),
+		@ApiResponse(responseCode = "401", description = "Authorization failed."),
+		@ApiResponse(responseCode = "403", description = "Forbidden.")})
 	public Dashboard dashboard(@InjectedJwtAuthentication JwtAuthentication jwtAuthentication) {
 		return dashboardService.getDashboard(jwtAuthentication);
 	}

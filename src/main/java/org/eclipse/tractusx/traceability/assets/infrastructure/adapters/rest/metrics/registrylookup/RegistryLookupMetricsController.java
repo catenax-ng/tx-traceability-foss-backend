@@ -22,7 +22,6 @@
 package org.eclipse.tractusx.traceability.assets.infrastructure.adapters.rest.metrics.registrylookup;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -36,12 +35,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @RestController
-@RequestMapping("/metrics")
+@RequestMapping(path = "/metrics", produces = "application/json", consumes = "application/json")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR')")
-@Tag(name ="Registry")
+@Tag(name = "Registry")
 public class RegistryLookupMetricsController {
 
 	private final RegistryLookupMeterRegistry registryLookupMeterRegistry;
@@ -50,18 +47,14 @@ public class RegistryLookupMetricsController {
 		this.registryLookupMeterRegistry = registryLookupMeterRegistry;
 	}
 
-	@Operation(operationId = "registryLookup",
+	@Operation(operationId = "metrics",
 		summary = "Gets Metrics",
 		tags = {"Registry"},
 		description = "The endpoint gets metrics for database.",
 		security = @SecurityRequirement(name = "oAuth2", scopes = "profile email"))
 	@ApiResponses(value = {@ApiResponse(responseCode = "200", description = "OK."),
-		@ApiResponse(responseCode = "401", description = "Authorization failed.",
-			content = {@Content(mediaType = APPLICATION_JSON_VALUE)
-			}),
-		@ApiResponse(responseCode = "403", description = "Forbidden.",
-			content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
-	})
+		@ApiResponse(responseCode = "401", description = "Authorization failed."),
+		@ApiResponse(responseCode = "403", description = "Forbidden.")})
 	@GetMapping("/registry-lookup")
 	public PageResult<RegistryLookupMetric> metrics(Pageable pageable) {
 		return registryLookupMeterRegistry.getMetrics(pageable);
