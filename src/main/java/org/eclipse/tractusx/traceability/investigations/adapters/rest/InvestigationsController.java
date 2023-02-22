@@ -132,7 +132,7 @@ public class InvestigationsController {
 	@PostMapping("/{investigationId}/approve")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void approveInvestigation(@PathVariable Long investigationId) {
-		investigationsPublisherService.approveInvestigation(traceabilityProperties.getBpn(), investigationId);
+		investigationsPublisherService.sendInvestigation(traceabilityProperties.getBpn(), investigationId);
 	}
 
 	@Operation(operationId = "cancelInvestigation",
