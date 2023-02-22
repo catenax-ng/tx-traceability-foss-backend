@@ -4,8 +4,8 @@
 </div>
 
 [![Apache 2 License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/eclipse-tractusx/traceability-foss-backend/blob/main/LICENSE)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=catenax-ng_product-traceability-foss-backend&metric=coverage)](https://sonarcloud.io/summary/overall?id=catenax-ng_product-traceability-foss-backend)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=catenax-ng_product-traceability-foss-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=catenax-ng_product-traceability-foss-backend)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tractusx_traceability-foss-backend&metric=coverage)](https://sonarcloud.io/summary/overall?id=eclipse-tractusx_traceability-foss-backend)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=eclipse-tractusx_traceability-foss-backend&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=eclipse-tractusx_traceability-foss-backend)
 [![Kics](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/kics.yml/badge.svg)](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/kics.yml)
 [![Trivy](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/trivy.yml/badge.svg)](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/trivy.yml)
 [![VeraCode](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/veracode.yaml/badge.svg)](https://github.com/eclipse-tractusx/traceability-foss-backend/actions/workflows/veracode.yaml)
@@ -16,6 +16,7 @@
 
 Trace-FOSS is a system for tracking parts along the supply chain. A high level of transparency across the supplier network enables faster intervention based on
 a recorded event in the supply chain. This saves costs by seamlessly tracking parts and creates trust through clearly defined and secure data access by the companies and persons involved in the process.
+TRACE-FOSS product composes of the backend and frontend repositories, frontend repository can be found under [GitHub repository](https://github.com/eclipse-tractusx/traceability-foss-frontend).
 
 ## Getting started
 
@@ -39,7 +40,7 @@ a recorded event in the supply chain. This saves costs by seamlessly tracking pa
 To run unit tests invoke following command:
 
 ```sh
-./gradlew test
+mvn clean test
 ```
 
 #### Integration tests
@@ -50,7 +51,7 @@ persistence layer, thus [Docker Engine](https://docs.docker.com/engine/) is requ
 To run integration tests invoke following command:
 
 ```sh
-./gradlew integrationTest
+mvn clean verify -PiT
 ```
 
 #### Running all tests
@@ -58,24 +59,13 @@ To run integration tests invoke following command:
 To run all tests invoke following command:
 
 ```sh
-./gradlew testAll
+mvn -DskipTests=false clean verify -PiT
 ```
 
 *Please note that this task depends on `integrationTest` task, so it's required to have [Docker Engine](https://docs.docker.com/engine/) running.*
 
-#### Generating OpenAPI clients
-
-OpenAPI clients are generated based on [OpenAPI Specification files](./openapi) and [correlated gradle tasks](build.gradle.kts).
-
-OpenAPI tasks have dependency on JavaCompile task that is OpenAPI client classes are automatically generated once you build the project
-and there should not be a need to generate them manually, however following command can be used for such purpose:
-
-```sh
-./gradlew generateAasRegistryApi
-```
-
 ## API documentation
-The project follows [OpenAPI Specification](https://swagger.io/specification/) in order to document implemented REST Endpoints. The documentation can be found under [/openapi directory](./openapi/product-traceability-foss-backend.json)
+The project follows [OpenAPI Specification](https://swagger.io/specification/) in order to document implemented REST Endpoints. The documentation can be found under [/openapi directory](./openapi/traceability-foss-backend.json)
 or can be viewed in the Swagger UI accessing the url: `{projectBasePath}/api/swagger-ui/index.html`
 
 ## Coding styles
