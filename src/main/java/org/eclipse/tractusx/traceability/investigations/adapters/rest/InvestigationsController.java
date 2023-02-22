@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.eclipse.tractusx.traceability.common.config.FeatureFlags;
 import org.eclipse.tractusx.traceability.common.model.PageResult;
 import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
 import org.eclipse.tractusx.traceability.investigations.adapters.rest.model.*;
@@ -33,6 +34,7 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.service.InvestigationsPublisherService;
 import org.eclipse.tractusx.traceability.investigations.domain.service.InvestigationsReadService;
 import org.eclipse.tractusx.traceability.investigations.domain.service.InvestigationsReceiverService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,7 +44,7 @@ import javax.validation.Valid;
 
 import static org.eclipse.tractusx.traceability.investigations.adapters.rest.validation.UpdateInvestigationValidator.validate;
 
-/*@Profile(FeatureFlags.NOTIFICATIONS_ENABLED_PROFILES)*/
+@Profile(FeatureFlags.NOTIFICATIONS_ENABLED_PROFILES)
 @RestController
 @RequestMapping(value = "/investigations", consumes = "application/json", produces = "application/json")
 @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR', 'ROLE_USER')")
