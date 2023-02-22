@@ -30,7 +30,6 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import java.util.List;
 import java.util.stream.Collectors;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public record EDCNotification(EDCNotificationHeader header, EDCNotificationContent content) {
 
 	@JsonIgnore
