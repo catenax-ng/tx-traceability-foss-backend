@@ -48,7 +48,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: "./target/surefire-reports/*.*"
+          files: "./target/surefire-reports/*.xml"
           check_name: "Unit Test Results"
 
   Integration-test:
@@ -71,7 +71,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: "./target/failsafe-reports/*.txt"
+          files: "./target/failsafe-reports/*.xml"
           check_name: "Integration Test Results"
 
   Publish-docker-image:
