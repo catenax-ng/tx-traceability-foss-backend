@@ -115,6 +115,7 @@ jobs:
         run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode -DskipTests=true clean package sonar:sonar
 
   Dependency-analysis:
+    needs: ["Sonar-Cloud-analyze"]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -129,4 +130,3 @@ jobs:
 
       - name: Dependency analysis report
         run: cat target/dependency-check-report.html
-
