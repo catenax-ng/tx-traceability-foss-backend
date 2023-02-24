@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Run unit tests
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Run integration tests
@@ -55,7 +55,7 @@ jobs:
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()
         with:
-          files: "./target/**/*.xml"
+          files: "./target/failsafe-reports/TEST-*.xml"
           check_name: "Integration Test Results"
 
   Publish-docker-image:
@@ -72,7 +72,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Login to Docker Registry
@@ -96,7 +96,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Cache SonarCloud packages
@@ -110,8 +110,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
-          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+          SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
         run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode -DskipTests=true clean package sonar:sonar
 
   Dependency-analysis:
@@ -122,7 +122,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           java-version: '${{ env.JAVA_VERSION }}'
-          distribution: 'adopt'
+          distribution: 'temurin'
           cache: 'maven'
 
       - name: Dependency rules report # possible severity values: <'fail'|'warn'|'ignore'>
