@@ -563,9 +563,10 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>build-image</id>
 						<phase>package</phase>
 						<goals>
-							<goal>build</goal>
+							<goal>dockerBuild</goal>
 						</goals>
 					</execution>
 				</executions>
