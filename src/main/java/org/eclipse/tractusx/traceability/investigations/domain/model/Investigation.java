@@ -37,6 +37,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+
 public class Investigation {
 
 	public static final Comparator<Investigation> COMPARE_BY_NEWEST_INVESTIGATION_CREATION_TIME = (o1, o2) -> {
@@ -54,19 +55,24 @@ public class Investigation {
 		return -1;
 	};
 
-	private final InvestigationId investigationId;
-	private final BPN bpn;
+	private InvestigationId investigationId;
+	private BPN bpn;
 	private InvestigationStatus investigationStatus;
-	private final InvestigationSide investigationSide;
-	private final String description;
-	private final Instant createdAt;
-	private final List<String> assetIds;
-	private final Map<String, Notification> notifications;
-	private final String sendTo;
+	private InvestigationSide investigationSide;
+	private String description;
+	private Instant createdAt;
+	private List<String> assetIds;
+	private Map<String, Notification> notifications;
+	private List<Notification> notificationList;
+	private String sendTo;
 
 	private String closeReason;
 	private String acceptReason;
 	private String declineReason;
+
+
+	public Investigation() {
+	}
 
 	public Investigation(InvestigationId investigationId,
 						 BPN bpn,
@@ -129,6 +135,26 @@ public class Investigation {
 		);
 	}
 
+	/**
+	 * Creates a new investigation with the specified properties and status set to "Received".
+	 *
+	 * @param createDate  the date when the investigation was created
+	 * @param bpn         the BPN associated with the investigation
+	 * @param description a description of the investigation
+	 * @return the new investigation object
+	 */
+	public static Investigation createReceivedInvestigation(Instant createDate, BPN bpn, String description) {
+		Investigation investigation = new Investigation();
+		investigation.setBpn(bpn);
+		investigation.setInvestigationStatus(InvestigationStatus.RECEIVED);
+		investigation.setInvestigationSide(InvestigationSide.RECEIVER);
+		investigation.setDescription(description);
+		investigation.setCreatedAt(createDate);
+		investigation.setAssetIds(new ArrayList<>());
+		investigation.setNotificationList(new ArrayList<>());
+		return investigation;
+	}
+
 	public List<String> getAssetIds() {
 		return Collections.unmodifiableList(assetIds);
 	}
@@ -179,6 +205,7 @@ public class Investigation {
 		this.closeReason = "canceled";
 	}
 
+	// TODO: Investigation Receiver
 	public void close(BPN callerBpn, String reason) {
 		validateBPN(callerBpn);
 
@@ -268,5 +295,73 @@ public class Investigation {
 		notification.getAffectedParts().stream()
 			.map(AffectedPart::assetId)
 			.forEach(assetIds::add);
+	}
+
+	public InvestigationId getInvestigationId() {
+		return investigationId;
+	}
+
+	public void setInvestigationId(InvestigationId investigationId) {
+		this.investigationId = investigationId;
+	}
+
+	public void setBpn(BPN bpn) {
+		this.bpn = bpn;
+	}
+
+	public void setInvestigationStatus(InvestigationStatus investigationStatus) {
+		this.investigationStatus = investigationStatus;
+	}
+
+	public void setInvestigationSide(InvestigationSide investigationSide) {
+		this.investigationSide = investigationSide;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Instant getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Instant createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public void setAssetIds(List<String> assetIds) {
+		this.assetIds = assetIds;
+	}
+
+	public void setNotifications(Map<String, Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public String getSendTo() {
+		return sendTo;
+	}
+
+	public void setSendTo(String sendTo) {
+		this.sendTo = sendTo;
+	}
+
+	public void setCloseReason(String closeReason) {
+		this.closeReason = closeReason;
+	}
+
+	public void setAcceptReason(String acceptReason) {
+		this.acceptReason = acceptReason;
+	}
+
+	public void setDeclineReason(String declineReason) {
+		this.declineReason = declineReason;
+	}
+
+	public List<Notification> getNotificationList() {
+		return notificationList;
+	}
+
+	public void setNotificationList(List<Notification> notificationList) {
+		this.notificationList = notificationList;
 	}
 }

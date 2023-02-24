@@ -26,16 +26,22 @@ import org.eclipse.tractusx.traceability.common.config.FeatureFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+import java.lang.invoke.MethodHandles;
+
 @Profile(FeatureFlags.NOTIFICATIONS_ENABLED_PROFILES)
 @ApiIgnore
 @RestController
+@Validated
 public class EdcController {
-	private static final Logger logger = LoggerFactory.getLogger(EdcController.class);
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	private final InvestigationsReceiverService investigationsReceiverService;
 
@@ -46,11 +52,12 @@ public class EdcController {
 	/**
 	 * Receiver API call for EDC Transfer
 	 */
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR')")
 	@PostMapping("/qualitynotifications/receive")
-	public void qualityNotificationReceive(@RequestBody EDCNotification edcNotification) {
+	public void qualityNotificationReceive(final @Valid @RequestBody EDCNotification edcNotification) {
 		logger.info("EdcController [qualityNotificationReceive] notificationId:{}", edcNotification);
 
-		investigationsReceiverService.handle(edcNotification);
+		investigationsReceiverService.handleNotificationReceiverCallback(edcNotification);
 	}
 }
 

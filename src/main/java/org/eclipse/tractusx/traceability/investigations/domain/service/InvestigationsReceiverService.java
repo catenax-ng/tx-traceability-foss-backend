@@ -32,8 +32,11 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Notificatio
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationReceiverBpnMismatchException;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.invoke.MethodHandles;
 import java.time.Clock;
 import java.util.UUID;
 
@@ -42,32 +45,34 @@ public class InvestigationsReceiverService {
 
 	private final InvestigationsRepository repository;
 	private final InvestigationsReadService investigationsReadService;
-	private final NotificationsService notificationsService;
 	private final TraceabilityProperties traceabilityProperties;
 	private final Clock clock;
-
+	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 NotificationsService notificationsService,
 										 TraceabilityProperties traceabilityProperties,
 										 Clock clock) {
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
-		this.notificationsService = notificationsService;
 		this.traceabilityProperties = traceabilityProperties;
 		this.clock = clock;
 	}
 
-	public void handle(EDCNotification edcNotification) {
+	// TODO: Investigation Receiver
+	public void handleNotificationReceiverCallback(EDCNotification edcNotification) {
+		logger.info("Received notification response with id {}", edcNotification.getNotificationId());
+
 		BPN recipientBPN = BPN.of(edcNotification.getRecipientBPN());
 		BPN applicationBPN = traceabilityProperties.getBpn();
 
+		// TODO this should be already handled in the rest controller if possible
 		if (!applicationBPN.equals(recipientBPN)) {
 			throw new InvestigationReceiverBpnMismatchException(applicationBPN, recipientBPN, edcNotification.getNotificationId());
 		}
 
 		NotificationType notificationType = edcNotification.convertNotificationType();
 
+		// TODO this should be already handled in the rest controller if possible
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
 			throw new InvestigationIllegalUpdate("Received %s classified edc notification which is not an investigation".formatted(notificationType));
 		}
@@ -101,6 +106,7 @@ public class InvestigationsReceiverService {
 		repository.save(investigation);
 	}
 
+	// TODO: Investigation Receiver
 	private void closeInvestigation(EDCNotification edcNotification) {
 		Investigation investigation = investigationsReadService.loadInvestigationByNotificationReferenceId(edcNotification.getNotificationId());
 
