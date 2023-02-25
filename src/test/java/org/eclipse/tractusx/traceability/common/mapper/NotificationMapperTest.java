@@ -28,21 +28,18 @@ import org.eclipse.tractusx.traceability.testdata.NotificationTestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationMapperTest {
-	private NotificationMapper notificationMapper;
 
-	@BeforeEach
-	void setUp() {
-		notificationMapper = new NotificationMapper();
-	}
+	@InjectMocks
+	private NotificationMapper notificationMapper;
 
 	@Test
 	void testToReceiverNotification() {
@@ -54,8 +51,7 @@ class NotificationMapperTest {
 		Notification expectedNotification = NotificationTestDataFactory.createNotificationTestData();
 
 		Notification actualNotification = notificationMapper.toReceiverNotification(edcNotification);
-
-		assertNull(expectedNotification.getId());
+		assertNotNull(actualNotification.getId());
 		assertEquals(expectedNotification.getNotificationReferenceId(), actualNotification.getNotificationReferenceId());
 		assertEquals(expectedNotification.getSenderBpnNumber(), actualNotification.getSenderBpnNumber());
 		assertEquals(expectedNotification.getReceiverBpnNumber(), actualNotification.getReceiverBpnNumber());

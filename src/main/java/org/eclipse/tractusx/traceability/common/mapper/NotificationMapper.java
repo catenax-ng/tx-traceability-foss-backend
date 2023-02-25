@@ -30,6 +30,12 @@ import java.util.UUID;
 @Component
 public class NotificationMapper {
 
+	/**
+	 * Creates a Notification object representing the notification received by the receiver for a given EDCNotification.
+	 *
+	 * @param edcNotification the EDCNotification received by the receiver
+	 * @return a Notification object representing the notification received by the receiver
+	 */
 	public Notification toReceiverNotification(EDCNotification edcNotification) {
 		return new Notification(
 			UUID.randomUUID().toString(),

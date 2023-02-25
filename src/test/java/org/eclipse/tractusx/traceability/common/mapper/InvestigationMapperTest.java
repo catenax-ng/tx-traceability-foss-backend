@@ -22,9 +22,9 @@ package org.eclipse.tractusx.traceability.common.mapper;
 
 import org.eclipse.tractusx.traceability.common.model.BPN;
 import org.eclipse.tractusx.traceability.investigations.domain.model.*;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -37,15 +37,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class InvestigationMapperTest {
+
+	@InjectMocks
 	private InvestigationMapper mapper;
 
 	@Mock
 	private Clock clock;
-
-	@BeforeEach
-	void setUp() {
-		mapper = new InvestigationMapper(clock);
-	}
 
 	@Test
 	void testToReceiverInvestigation() {

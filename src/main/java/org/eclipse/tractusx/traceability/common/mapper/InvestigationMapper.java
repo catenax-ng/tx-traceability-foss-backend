@@ -36,6 +36,14 @@ public class InvestigationMapper {
 		this.clock = clock;
 	}
 
+	/**
+	 * Creates an Investigation object representing the investigation received by the receiver for a given notification.
+	 *
+	 * @param bpn          the BPN of the investigation
+	 * @param description  the description of the investigation
+	 * @param notification the notification associated with the investigation
+	 * @return an Investigation object representing the investigation received by the receiver
+	 */
 	public Investigation toReceiverInvestigation(BPN bpn, String description, Notification notification) {
 
 		List<String> assetIds = new ArrayList<>();
