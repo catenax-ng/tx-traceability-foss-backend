@@ -9,11 +9,13 @@ import org.eclipse.tractusx.traceability.investigations.domain.service.Investiga
 import org.eclipse.tractusx.traceability.investigations.domain.service.NotificationsService;
 import org.eclipse.tractusx.traceability.testdata.InvestigationTestDataFactory;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
-
+@ExtendWith(MockitoExtension.class)
 class SendInvestigationCommandTest {
 
 	@InjectMocks
@@ -30,15 +32,13 @@ class SendInvestigationCommandTest {
 	void testExecuteInvestigationCommand() {
 		// Given
 		final BPN bpn = new BPN("bpn123");
-		final Long id = 1L;
-		InvestigationId investigationId = new InvestigationId(id);
+		InvestigationId investigationId = new InvestigationId(1L);
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.ACKNOWLEDGED, InvestigationStatus.RECEIVED);
 
+		command = new SendInvestigationCommand(repository, investigationsReadService,
+			notificationsService, bpn, 1L);
 		when(investigationsReadService.loadInvestigation(investigationId)).thenReturn(investigation);
 		when(repository.update(investigation)).thenReturn(investigationId);
-
-		command = new SendInvestigationCommand(repository, investigationsReadService,
-			notificationsService, bpn, id);
 
 		// When
 		command.executeInvestigationCommand();
