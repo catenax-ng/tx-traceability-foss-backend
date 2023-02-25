@@ -23,9 +23,8 @@ package org.eclipse.tractusx.traceability.common.mapper;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotification;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotificationContent;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotificationHeader;
-import org.eclipse.tractusx.traceability.investigations.domain.model.AffectedPart;
-import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 import org.eclipse.tractusx.traceability.investigations.domain.model.Notification;
+import org.eclipse.tractusx.traceability.testdata.NotificationTestDataFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,21 +51,7 @@ class NotificationMapperTest {
 		EDCNotificationContent content = new EDCNotificationContent("information", List.of("partId"));
 		EDCNotification edcNotification = new EDCNotification(header, content);
 
-
-		List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
-
-
-		Notification expectedNotification = new Notification(
-			null,
-			"id123",
-			"senderBPN",
-			"recipientBPN",
-			"senderAddress",
-			null,
-			"information",
-			InvestigationStatus.RECEIVED,
-			affectedParts
-		);
+		Notification expectedNotification = NotificationTestDataFactory.createNotificationTestData();
 
 		Notification actualNotification = notificationMapper.toReceiverNotification(edcNotification);
 
