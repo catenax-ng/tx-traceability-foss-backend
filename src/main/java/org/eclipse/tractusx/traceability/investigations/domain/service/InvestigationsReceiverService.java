@@ -68,6 +68,18 @@ public class InvestigationsReceiverService {
 		BPN recipientBPN = BPN.of(edcNotification.getRecipientBPN());
 		BPN applicationBPN = traceabilityProperties.getBpn();
 
+		validateNotificationReceiverCallback(edcNotification, recipientBPN, applicationBPN);
+
+		InvestigationStatus investigationStatus = edcNotification.convertInvestigationStatus();
+
+		switch (investigationStatus) {
+			case SENT -> receiveInvestigation(edcNotification, recipientBPN);
+			case CLOSED -> closeInvestigation(edcNotification);
+			default -> throw new InvestigationIllegalUpdate("Failed to handle notification due to unhandled %s status".formatted(investigationStatus));
+		}
+	}
+
+	private void validateNotificationReceiverCallback(EDCNotification edcNotification, BPN recipientBPN, BPN applicationBPN) {
 		// TODO this should be already handled in the rest controller if possible
 		if (!applicationBPN.equals(recipientBPN)) {
 			throw new InvestigationReceiverBpnMismatchException(applicationBPN, recipientBPN, edcNotification.getNotificationId());
@@ -78,14 +90,6 @@ public class InvestigationsReceiverService {
 		// TODO this should be already handled in the rest controller if possible
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
 			throw new InvestigationIllegalUpdate("Received %s classified edc notification which is not an investigation".formatted(notificationType));
-		}
-
-		InvestigationStatus investigationStatus = edcNotification.convertInvestigationStatus();
-
-		switch (investigationStatus) {
-			case SENT -> receiveInvestigation(edcNotification, recipientBPN);
-			case CLOSED -> closeInvestigation(edcNotification);
-			default -> throw new InvestigationIllegalUpdate("Failed to handle notification due to unhandled %s status".formatted(investigationStatus));
 		}
 	}
 
@@ -98,9 +102,7 @@ public class InvestigationsReceiverService {
 	// TODO: Investigation Receiver
 	private void closeInvestigation(EDCNotification edcNotification) {
 		Investigation investigation = investigationsReadService.loadInvestigationByNotificationReferenceId(edcNotification.getNotificationId());
-
 		investigation.close(traceabilityProperties.getBpn(), edcNotification.getInformation());
-
 		repository.update(investigation);
 	}
 

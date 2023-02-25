@@ -52,11 +52,9 @@ public class EdcController {
 	/**
 	 * Receiver API call for EDC Transfer
 	 */
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPERVISOR')")
 	@PostMapping("/qualitynotifications/receive")
 	public void qualityNotificationReceive(final @Valid @RequestBody EDCNotification edcNotification) {
 		logger.info("EdcController [qualityNotificationReceive] notificationId:{}", edcNotification);
-
 		investigationsReceiverService.handleNotificationReceiverCallback(edcNotification);
 	}
 }
