@@ -33,7 +33,7 @@ class SendInvestigationCommandTest {
 		// Given
 		final BPN bpn = new BPN("bpn123");
 		InvestigationId investigationId = new InvestigationId(1L);
-		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.ACKNOWLEDGED, InvestigationStatus.RECEIVED);
+		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.CREATED, InvestigationStatus.CREATED);
 
 		command = new SendInvestigationCommand(repository, investigationsReadService,
 			notificationsService, bpn, 1L);
