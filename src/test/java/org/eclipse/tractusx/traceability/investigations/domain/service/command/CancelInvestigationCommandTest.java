@@ -35,7 +35,7 @@ class CancelInvestigationCommandTest {
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.CREATED, InvestigationStatus.CREATED);
 		command = new CancelInvestigationCommand(repository, readService, bpn, id);
 		when(readService.loadInvestigation(any())).thenReturn(investigation);
-		when(repository.update(any(Investigation.class))).thenReturn(new InvestigationId(id));
+		when(repository.update(investigation)).thenReturn(new InvestigationId(id));
 
 		// when
 		InvestigationId result = command.executeInvestigationCommand();
