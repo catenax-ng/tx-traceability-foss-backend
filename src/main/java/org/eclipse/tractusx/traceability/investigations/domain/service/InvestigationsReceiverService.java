@@ -21,6 +21,8 @@
 
 package org.eclipse.tractusx.traceability.investigations.domain.service;
 
+import org.eclipse.tractusx.traceability.common.mapper.InvestigationMapper;
+import org.eclipse.tractusx.traceability.common.mapper.NotificationMapper;
 import org.eclipse.tractusx.traceability.common.model.BPN;
 import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotification;
@@ -38,24 +40,25 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.time.Clock;
-import java.util.UUID;
 
 @Component
 public class InvestigationsReceiverService {
 
 	private final InvestigationsRepository repository;
 	private final InvestigationsReadService investigationsReadService;
+	private final NotificationMapper notificationMapper;
+	private final InvestigationMapper investigationMapper;
 	private final TraceabilityProperties traceabilityProperties;
-	private final Clock clock;
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 TraceabilityProperties traceabilityProperties,
-										 Clock clock) {
+										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties, Clock clock) {
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
+		this.notificationMapper = notificationMapper;
+		this.investigationMapper = investigationMapper;
 		this.traceabilityProperties = traceabilityProperties;
-		this.clock = clock;
 	}
 
 	// TODO: Investigation Receiver
@@ -87,22 +90,8 @@ public class InvestigationsReceiverService {
 	}
 
 	private void receiveInvestigation(EDCNotification edcNotification, BPN bpn) {
-		Investigation investigation = Investigation.receiveInvestigation(clock.instant(), bpn, edcNotification.getInformation());
-
-		Notification notification = new Notification(
-			UUID.randomUUID().toString(),
-			edcNotification.getNotificationId(),
-			edcNotification.getSenderBPN(),
-			edcNotification.getRecipientBPN(),
-			edcNotification.getSenderAddress(),
-			null,
-			edcNotification.getInformation(),
-			InvestigationStatus.RECEIVED,
-			edcNotification.getListOfAffectedItems()
-		);
-
-		investigation.addNotification(notification);
-
+		Notification notification = notificationMapper.toReceiverNotification(edcNotification);
+		Investigation investigation = investigationMapper.toReceiverInvestigation(bpn, edcNotification.getInformation(), notification);
 		repository.save(investigation);
 	}
 

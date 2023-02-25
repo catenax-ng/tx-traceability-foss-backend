@@ -21,6 +21,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<mockito-junit-jupiter.version>4.6.0</mockito-junit-jupiter.version>
 
 		<!-- versions for Maven plugin -->
 		<asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
@@ -258,6 +259,10 @@
 		</dependency>
 
 		<!-- test related dependencies -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>

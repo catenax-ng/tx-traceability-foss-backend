@@ -28,12 +28,7 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.exception.I
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationStatusTransitionNotAllowed;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -117,42 +112,6 @@ public class Investigation {
 			new ArrayList<>(),
 			new ArrayList<>()
 		);
-	}
-
-	public static Investigation receiveInvestigation(Instant createDate, BPN bpn, String description) {
-		return new Investigation(
-			null,
-			bpn,
-			InvestigationStatus.RECEIVED,
-			InvestigationSide.RECEIVER,
-			null,
-			null,
-			null,
-			description,
-			createDate,
-			new ArrayList<>(),
-			new ArrayList<>()
-		);
-	}
-
-	/**
-	 * Creates a new investigation with the specified properties and status set to "Received".
-	 *
-	 * @param createDate  the date when the investigation was created
-	 * @param bpn         the BPN associated with the investigation
-	 * @param description a description of the investigation
-	 * @return the new investigation object
-	 */
-	public static Investigation createReceivedInvestigation(Instant createDate, BPN bpn, String description) {
-		Investigation investigation = new Investigation();
-		investigation.setBpn(bpn);
-		investigation.setInvestigationStatus(InvestigationStatus.RECEIVED);
-		investigation.setInvestigationSide(InvestigationSide.RECEIVER);
-		investigation.setDescription(description);
-		investigation.setCreatedAt(createDate);
-		investigation.setAssetIds(new ArrayList<>());
-		investigation.setNotificationList(new ArrayList<>());
-		return investigation;
 	}
 
 	public List<String> getAssetIds() {
