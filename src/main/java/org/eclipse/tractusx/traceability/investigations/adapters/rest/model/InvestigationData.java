@@ -36,4 +36,40 @@ public record InvestigationData(@ApiModelProperty(example = "66") Long id,
 								InvestigationReason reason,
 								@ApiModelProperty(example = "BPNL00000003AYRE") String sendTo
 ) {
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public String getCreatedDate() {
+		return createdDate;
+	}
+
+	public List<String> getAssetIds() {
+		return assetIds;
+	}
+
+	public InvestigationSide getChannel() {
+		return channel;
+	}
+
+	public InvestigationReason getReason() {
+		return reason;
+	}
+
+	public String getSendTo() {
+		return sendTo;
+	}
 }
