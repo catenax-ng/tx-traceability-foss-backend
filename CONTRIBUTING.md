@@ -57,7 +57,7 @@ The commit messages have to match a pattern in the form of:
 ``< type >(optional scope):[<Ticket_ID>] < description >``
 
 Example:
-``feat(users):[TRACEFOSS-XXX] Description``
+``feat(users): TRACEFOSS-XXX Description``
 
 Detailed pattern can be found here: [commit-msg](./dev/commit-msg)
 
@@ -65,8 +65,6 @@ Detailed pattern can be found here: [commit-msg](./dev/commit-msg)
 ```shell
 cp dev/commit-msg .git/hooks/commit-msg && chmod 500 .git/hooks/commit-msg
 ```
-
-For further information please see https://github.com/hazcod/semantic-commit-hook
 
 ## Contact
 

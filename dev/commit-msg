@@ -16,8 +16,8 @@ fi
 url="$(git remote get-url origin | sed 's/\.git/#commit-messages/')"
 
 # check semantic versioning scheme
-if ! echo "$commitTitle" | grep -qE '^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)\([a-z0-9/-]+\)\:\[[A-Z0-9-]+\].*$'; then
-	echo "Your commit title did not follow semantic versioning: $commitTitle"
-	echo "Please see $url"
+if ! echo "$commitTitle" | grep -qE '^(chore|fix|feat)\([a-z0-9\/-]+\)\s?:\s?[A-Z0-9-]+.*$'; then
+	echo "Your commit title did not follow commit rules: $commitTitle"
+	echo "Please see .git/hooks/commit-msg"
 	exit 1
 fi
