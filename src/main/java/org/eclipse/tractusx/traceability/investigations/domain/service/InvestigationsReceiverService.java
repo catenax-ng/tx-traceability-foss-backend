@@ -93,7 +93,8 @@ public class InvestigationsReceiverService {
 			null,
 			edcNotification.getInformation(),
 			InvestigationStatus.RECEIVED,
-			edcNotification.getListOfAffectedItems()
+			edcNotification.getListOfAffectedItems(),
+			edcNotification.getTargetDate()
 		);
 
 		investigation.addNotification(notification);

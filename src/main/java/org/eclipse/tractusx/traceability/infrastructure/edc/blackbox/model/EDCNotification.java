@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import org.eclipse.tractusx.traceability.investigations.domain.model.AffectedPart;
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -75,6 +76,10 @@ public record EDCNotification(EDCNotificationHeader header, EDCNotificationConte
 
 		return InvestigationStatus.fromValue(investigationStatus)
 			.orElseThrow(() -> new IllegalArgumentException("%s not supported investigation status".formatted(investigationStatus)));
+	}
+
+	public Instant getTargetDate() {
+		return Instant.parse(header.targetDate());
 	}
 }
 
