@@ -106,9 +106,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Copy filtered resources
-        run: cp -r ${PWD}/target/filtered-resources/* ${PWD}/src/main/resources/
-
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
