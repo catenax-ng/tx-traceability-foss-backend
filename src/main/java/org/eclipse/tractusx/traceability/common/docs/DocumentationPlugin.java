@@ -69,9 +69,9 @@ public class DocumentationPlugin implements OperationBuilderPlugin, ParameterBui
 
 	private String getOperationKey(OperationContext context) {
 		return "operations." + context.requestMappingPattern()
-			.replaceAll("/", ".")
-			.replaceAll("\\{", "")
-			.replaceAll("\\}", "")
+			.replace("/", ".")
+			.replace("{", "")
+			.replace("}", "")
 			.substring(1);
 	}
 

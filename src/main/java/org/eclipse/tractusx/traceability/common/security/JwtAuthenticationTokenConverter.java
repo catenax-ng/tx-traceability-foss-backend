@@ -21,6 +21,7 @@
 
 package org.eclipse.tractusx.traceability.common.security;
 
+import org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi.UserAuthorizationException;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
@@ -31,6 +32,7 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 
 import java.util.Collection;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,11 +48,14 @@ public class JwtAuthenticationTokenConverter implements Converter<Jwt, AbstractA
 
 	@Override
 	public AbstractAuthenticationToken convert(@NotNull Jwt source) {
-		Collection<GrantedAuthority> authorities =
-			Stream.concat(defaultGrantedAuthoritiesConverter.convert(source).stream(), extractRoles(source, resourceClient).stream()
+		Collection<GrantedAuthority> grantedAuthorities = defaultGrantedAuthoritiesConverter.convert(source);
+		if (grantedAuthorities.isEmpty()) {
+			throw new UserAuthorizationException("Couldn't obtain roles for user");
+		} else {
+			Set<GrantedAuthority> authorities = Stream.concat(grantedAuthorities.stream(), extractRoles(source, resourceClient).stream()
 			).collect(Collectors.toSet());
-
-		return new JwtAuthenticationToken(source, authorities);
+			return new JwtAuthenticationToken(source, authorities);
+		}
 	}
 
 	private static Collection<? extends GrantedAuthority> extractRoles(final Jwt jwt, final String resourceId) {

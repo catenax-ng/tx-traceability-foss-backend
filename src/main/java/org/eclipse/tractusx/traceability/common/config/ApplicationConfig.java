@@ -26,6 +26,7 @@ import io.github.resilience4j.core.registry.EntryRemovedEvent;
 import io.github.resilience4j.core.registry.EntryReplacedEvent;
 import io.github.resilience4j.core.registry.RegistryEventConsumer;
 import io.github.resilience4j.retry.Retry;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -103,17 +104,19 @@ public class ApplicationConfig {
 
 		return new RegistryEventConsumer<>() {
 			@Override
-			public void onEntryAddedEvent(EntryAddedEvent<Retry> entryAddedEvent) {
+			public void onEntryAddedEvent(@NotNull EntryAddedEvent<Retry> entryAddedEvent) {
 				entryAddedEvent.getAddedEntry().getEventPublisher()
 					.onEvent(event -> logger.info(event.toString()));
 			}
 
 			@Override
-			public void onEntryReplacedEvent(EntryReplacedEvent<Retry> entryReplacedEvent) {
+			public void onEntryReplacedEvent(@NotNull EntryReplacedEvent<Retry> entryReplacedEvent) {
+				// Nothing to do
 			}
 
 			@Override
-			public void onEntryRemovedEvent(EntryRemovedEvent<Retry> entryRemoveEvent) {
+			public void onEntryRemovedEvent(@NotNull EntryRemovedEvent<Retry> entryRemoveEvent) {
+				// Nothing to do
 			}
 		};
 	}
