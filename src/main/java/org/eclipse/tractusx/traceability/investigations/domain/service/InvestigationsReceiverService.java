@@ -32,7 +32,6 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 import org.eclipse.tractusx.traceability.investigations.domain.model.Notification;
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
-import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationReceiverBpnMismatchException;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,9 +64,8 @@ public class InvestigationsReceiverService {
 		logger.info("Received notification response with id {}", edcNotification.getNotificationId());
 
 		BPN recipientBPN = BPN.of(edcNotification.getRecipientBPN());
-		BPN applicationBPN = traceabilityProperties.getBpn();
 
-		validateNotificationReceiverCallback(edcNotification, recipientBPN, applicationBPN);
+		validateNotificationReceiverCallback(edcNotification);
 
 		InvestigationStatus investigationStatus = edcNotification.convertInvestigationStatus();
 
@@ -78,7 +76,7 @@ public class InvestigationsReceiverService {
 		}
 	}
 
-	private void validateNotificationReceiverCallback(EDCNotification edcNotification, BPN recipientBPN, BPN applicationBPN) {
+	private void validateNotificationReceiverCallback(EDCNotification edcNotification) {
 		NotificationType notificationType = edcNotification.convertNotificationType();
 
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
