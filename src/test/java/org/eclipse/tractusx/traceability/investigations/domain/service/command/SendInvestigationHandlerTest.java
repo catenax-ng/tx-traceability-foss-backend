@@ -16,10 +16,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
-class SendInvestigationCommandTest {
+class SendInvestigationHandlerTest {
 
 	@InjectMocks
-	private SendInvestigationCommand command;
+	private SendInvestigationHandler command;
 	@Mock
 	private InvestigationsRepository repository;
 	@Mock
@@ -35,13 +35,13 @@ class SendInvestigationCommandTest {
 		InvestigationId investigationId = new InvestigationId(1L);
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.CREATED, InvestigationStatus.CREATED);
 
-		command = new SendInvestigationCommand(repository, investigationsReadService,
+		command = new SendInvestigationHandler(repository, investigationsReadService,
 			notificationsService, bpn, 1L);
 		when(investigationsReadService.loadInvestigation(investigationId)).thenReturn(investigation);
 		when(repository.update(investigation)).thenReturn(investigationId);
 
 		// When
-		command.executeInvestigationCommand();
+		command.executeInvestigation();
 
 		// Then
 		verify(investigationsReadService).loadInvestigation(investigationId);

@@ -25,7 +25,10 @@ import org.eclipse.tractusx.traceability.assets.domain.ports.AssetRepository;
 import org.eclipse.tractusx.traceability.common.model.BPN;
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationId;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.*;
+import org.eclipse.tractusx.traceability.investigations.domain.service.command.CancelInvestigationHandler;
+import org.eclipse.tractusx.traceability.investigations.domain.service.command.CloseInvestigationHandler;
+import org.eclipse.tractusx.traceability.investigations.domain.service.command.SendInvestigationHandler;
+import org.eclipse.tractusx.traceability.investigations.domain.service.command.StartInvestigationHandler;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
@@ -39,16 +42,14 @@ public class InvestigationsPublisherService {
 	private final InvestigationsReadService investigationsReadService;
 	private final AssetRepository assetRepository;
 	private final Clock clock;
-	private final InvestigationCommandInvoker investigationCommandInvoker;
 
 
-	public InvestigationsPublisherService(NotificationsService notificationsService, InvestigationsRepository repository, InvestigationsReadService investigationsReadService, AssetRepository assetRepository, Clock clock, InvestigationCommandInvoker investigationCommandInvoker) {
+	public InvestigationsPublisherService(NotificationsService notificationsService, InvestigationsRepository repository, InvestigationsReadService investigationsReadService, AssetRepository assetRepository, Clock clock) {
 		this.notificationsService = notificationsService;
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
 		this.assetRepository = assetRepository;
 		this.clock = clock;
-		this.investigationCommandInvoker = investigationCommandInvoker;
 	}
 
 	/**
@@ -60,10 +61,9 @@ public class InvestigationsPublisherService {
 	 * @return the ID of the newly created investigation
 	 */
 	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
-		StartInvestigationCommand startInvestigationCommand = new StartInvestigationCommand(clock, bpn, assetIds,
+		StartInvestigationHandler startInvestigationHandler = new StartInvestigationHandler(clock, bpn, assetIds,
 			description, repository, assetRepository);
-		this.investigationCommandInvoker.setCommand(startInvestigationCommand);
-		return this.investigationCommandInvoker.handleInvestigation();
+		return startInvestigationHandler.executeInvestigation();
 	}
 
 	/**
@@ -73,12 +73,11 @@ public class InvestigationsPublisherService {
 	 * @param id  the ID of the investigation to cancel
 	 */
 	public void cancelInvestigation(BPN bpn, Long id) {
-		CancelInvestigationCommand cancelInvestigationCommand = new CancelInvestigationCommand(repository,
+		CancelInvestigationHandler cancelInvestigationHandler = new CancelInvestigationHandler(repository,
 			investigationsReadService,
 			bpn,
 			id);
-		this.investigationCommandInvoker.setCommand(cancelInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		cancelInvestigationHandler.executeInvestigation();
 	}
 
 	/**
@@ -88,13 +87,12 @@ public class InvestigationsPublisherService {
 	 * @param id  the ID of the investigation to send
 	 */
 	public void sendInvestigation(BPN bpn, Long id) {
-		SendInvestigationCommand sendInvestigationCommand = new SendInvestigationCommand(repository,
+		SendInvestigationHandler sendInvestigationHandler = new SendInvestigationHandler(repository,
 			investigationsReadService,
 			notificationsService,
 			bpn,
 			id);
-		this.investigationCommandInvoker.setCommand(sendInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		sendInvestigationHandler.executeInvestigation();
 	}
 
 	/**
@@ -105,13 +103,12 @@ public class InvestigationsPublisherService {
 	 * @param reason the reason for closing the investigation
 	 */
 	public void closeInvestigation(BPN bpn, Long id, String reason) {
-		CloseInvestigationCommand closeInvestigationCommand = new CloseInvestigationCommand(investigationsReadService,
+		CloseInvestigationHandler closeInvestigationHandler = new CloseInvestigationHandler(investigationsReadService,
 			repository,
 			notificationsService,
 			bpn,
 			id,
 			reason);
-		this.investigationCommandInvoker.setCommand(closeInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		closeInvestigationHandler.executeInvestigation();
 	}
 }

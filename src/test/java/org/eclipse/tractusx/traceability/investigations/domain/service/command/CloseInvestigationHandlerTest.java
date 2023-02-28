@@ -18,10 +18,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CloseInvestigationCommandTest {
+class CloseInvestigationHandlerTest {
 
 	@InjectMocks
-	private CloseInvestigationCommand command;
+	private CloseInvestigationHandler command;
 
 	@Mock
 	private InvestigationsReadService investigationsReadService;
@@ -37,7 +37,7 @@ class CloseInvestigationCommandTest {
 		final long id = 1L;
 		final String reason = "TEST_REASON";
 		final BPN bpn = new BPN("bpn123");
-		command = new CloseInvestigationCommand(investigationsReadService, investigationRepository, notificationsService,
+		command = new CloseInvestigationHandler(investigationsReadService, investigationRepository, notificationsService,
 			bpn, id, reason);
 		InvestigationId investigationId = new InvestigationId(id);
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.ACKNOWLEDGED, InvestigationStatus.RECEIVED);
@@ -45,7 +45,7 @@ class CloseInvestigationCommandTest {
 		when(investigationRepository.update(investigation)).thenReturn(investigationId);
 
 		// When
-		InvestigationId result = command.executeInvestigationCommand();
+		InvestigationId result = command.executeInvestigation();
 
 		// Then
 		verify(investigationsReadService).loadInvestigation(investigationId);

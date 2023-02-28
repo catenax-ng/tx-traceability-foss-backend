@@ -20,10 +20,10 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class StartInvestigationCommandTest {
+class StartInvestigationHandlerTest {
 
 	@InjectMocks
-	private StartInvestigationCommand command;
+	private StartInvestigationHandler command;
 
 	@Mock
 	private InvestigationsRepository repository;
@@ -38,12 +38,12 @@ class StartInvestigationCommandTest {
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.ACKNOWLEDGED, InvestigationStatus.CLOSED);
 		when(assetRepository.getAssetsById(Arrays.asList("asset-1", "asset-2"))).thenReturn(List.of(AssetTestDataFactory.createAssetTestData()));
 		when(repository.save(any(Investigation.class))).thenReturn(investigation.getId());
-		command = new StartInvestigationCommand(clock, BPN.of("bpn-123"),
+		command = new StartInvestigationHandler(clock, BPN.of("bpn-123"),
 			Arrays.asList("asset-1", "asset-2"),
 			"Test investigation", repository, assetRepository);
 
 		// When
-		command.executeInvestigationCommand();
+		command.executeInvestigation();
 
 		// Then
 		verify(assetRepository).getAssetsById(Arrays.asList("asset-1", "asset-2"));

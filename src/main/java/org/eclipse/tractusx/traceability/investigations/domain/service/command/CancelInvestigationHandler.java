@@ -6,13 +6,13 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.eclipse.tractusx.traceability.investigations.domain.service.InvestigationsReadService;
 
-public record CancelInvestigationCommand(
+public record CancelInvestigationHandler(
 	InvestigationsRepository repository,
 	InvestigationsReadService investigationsReadService,
-	BPN bpn, Long id) implements InvestigationCommand {
+	BPN bpn, Long id) implements InvestigationHandler {
 
 	@Override
-	public InvestigationId executeInvestigationCommand() {
+	public InvestigationId executeInvestigation() {
 		InvestigationId investigationId = new InvestigationId(id);
 		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
 		investigation.cancel(bpn);

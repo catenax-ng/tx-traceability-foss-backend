@@ -12,13 +12,13 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public record StartInvestigationCommand(Clock clock, BPN bpn,
-										List<String> assetIds, String description,
-										InvestigationsRepository repository,
-										AssetRepository assetRepository) implements InvestigationCommand {
+public record StartInvestigationHandler(Clock clock, BPN bpn,
+                                        List<String> assetIds, String description,
+                                        InvestigationsRepository repository,
+                                        AssetRepository assetRepository) implements InvestigationHandler {
 
 	@Override
-	public InvestigationId executeInvestigationCommand() {
+	public InvestigationId executeInvestigation() {
 		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, description);
 
 		Map<String, List<Asset>> assetsByManufacturer = assetRepository.getAssetsById(assetIds).stream().collect(Collectors.groupingBy(Asset::getManufacturerId));

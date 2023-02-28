@@ -17,10 +17,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class CancelInvestigationCommandTest {
+class CancelInvestigationHandlerTest {
 
 	@InjectMocks
-	private CancelInvestigationCommand command;
+	private CancelInvestigationHandler command;
 	@Mock
 	private InvestigationsRepository repository;
 	@Mock
@@ -33,12 +33,12 @@ class CancelInvestigationCommandTest {
 		BPN bpn = new BPN("bpn123");
 		Long id = 1L;
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.CREATED, InvestigationStatus.CREATED);
-		command = new CancelInvestigationCommand(repository, readService, bpn, id);
+		command = new CancelInvestigationHandler(repository, readService, bpn, id);
 		when(readService.loadInvestigation(any())).thenReturn(investigation);
 		when(repository.update(investigation)).thenReturn(new InvestigationId(id));
 
 		// when
-		InvestigationId result = command.executeInvestigationCommand();
+		InvestigationId result = command.executeInvestigation();
 
 		// Then
 		verify(readService).loadInvestigation(new InvestigationId(id));

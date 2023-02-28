@@ -7,21 +7,22 @@ import org.eclipse.tractusx.traceability.investigations.domain.ports.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.service.InvestigationsReadService;
 import org.eclipse.tractusx.traceability.investigations.domain.service.NotificationsService;
 
-public record SendInvestigationCommand(
-	InvestigationsRepository repository,
+public record CloseInvestigationHandler(
 	InvestigationsReadService investigationsReadService,
+	InvestigationsRepository investigationRepository,
 	NotificationsService notificationsService,
-	BPN bpn, Long id) implements InvestigationCommand {
+	BPN bpn, Long id,
+	String reason) implements InvestigationHandler {
 
 	@Override
-	public InvestigationId executeInvestigationCommand() {
+	public InvestigationId executeInvestigation() {
 		InvestigationId investigationId = new InvestigationId(id);
 
 		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
 
-		investigation.send(bpn);
+		investigation.close(bpn, reason);
 
-		InvestigationId persistedInvestigationId = repository.update(investigation);
+		InvestigationId persistedInvestigationId = investigationRepository.update(investigation);
 
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 		return persistedInvestigationId;
