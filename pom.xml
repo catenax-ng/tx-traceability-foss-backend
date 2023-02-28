@@ -21,6 +21,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<start-class>org.eclipse.tractusx.traceability.TraceabilityApplication</start-class>
 		<spring.boot.version>2.7.7</spring.boot.version>
 		<!-- versions for Maven plugin -->
 		<asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
