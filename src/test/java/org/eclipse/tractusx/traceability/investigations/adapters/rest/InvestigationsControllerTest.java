@@ -87,33 +87,3 @@ class InvestigationsControllerTest {
 		assertThat(actual).isNotNull();
 	}
 }
-
-
-
-
-/*	@Test
-	@WithMockUser(roles = {"ADMIN", "SUPERVISOR"})
-	public void closeInvestigation_ReturnsNoContent() throws Exception {
-		Long investigationId = 1L;
-		CloseInvestigationRequest closeInvestigationRequest = new CloseInvestigationRequest("reason");
-
-		mockMvc.perform(post("/{investigationId}/close", investigationId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(objectMapper.writeValueAsString(closeInvestigationRequest)))
-			.andExpect(status().isNoContent());*/
-
-/*		verify(investigationsPublisherService)
-			.closeInvestigation(eq(traceabilityProperties.getBpn()), eq(investigationId), eq(closeInvestigationRequest.reason()));*/
-
-
-/*	@Test
-	@WithMockUser
-	public void closeInvestigation_ReturnsUnauthorized_WhenUserRoleIsNotAuthorized() throws Exception {
-		Long investigationId = 1L;
-		CloseInvestigationRequest closeInvestigationRequest = new CloseInvestigationRequest("reason");
-
-		mockMvc.perform(post("/{investigationId}/close", investigationId)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(objectMapper.writeValueAsString(closeInvestigationRequest)))
-			.andExpect(status().isUnauthorized());
-	}*/

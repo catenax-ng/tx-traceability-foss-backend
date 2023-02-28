@@ -61,7 +61,6 @@ public class InvestigationsReceiverService {
 		this.traceabilityProperties = traceabilityProperties;
 	}
 
-	// TODO: Investigation Receiver
 	public void handleNotificationReceiverCallback(EDCNotification edcNotification) {
 		logger.info("Received notification response with id {}", edcNotification.getNotificationId());
 
@@ -80,14 +79,12 @@ public class InvestigationsReceiverService {
 	}
 
 	private void validateNotificationReceiverCallback(EDCNotification edcNotification, BPN recipientBPN, BPN applicationBPN) {
-		// TODO this should be already handled in the rest controller if possible
 		if (!applicationBPN.equals(recipientBPN)) {
 			throw new InvestigationReceiverBpnMismatchException(applicationBPN, recipientBPN, edcNotification.getNotificationId());
 		}
 
 		NotificationType notificationType = edcNotification.convertNotificationType();
 
-		// TODO this should be already handled in the rest controller if possible
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
 			throw new InvestigationIllegalUpdate("Received %s classified edc notification which is not an investigation".formatted(notificationType));
 		}
@@ -99,7 +96,6 @@ public class InvestigationsReceiverService {
 		repository.save(investigation);
 	}
 
-	// TODO: Investigation Receiver
 	private void closeInvestigation(EDCNotification edcNotification) {
 		Investigation investigation = investigationsReadService.loadInvestigationByNotificationReferenceId(edcNotification.getNotificationId());
 		investigation.close(traceabilityProperties.getBpn(), edcNotification.getInformation());
