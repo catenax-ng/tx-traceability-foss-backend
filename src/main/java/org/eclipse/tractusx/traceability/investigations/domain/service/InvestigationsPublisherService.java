@@ -32,12 +32,24 @@ import java.time.Clock;
 import java.util.List;
 
 @Service
-public record InvestigationsPublisherService(
-	NotificationsService notificationsService,
-	InvestigationsRepository repository,
-	InvestigationsReadService investigationsReadService,
-	AssetRepository assetRepository, Clock clock,
-	InvestigationCommandInvoker investigationCommandInvoker) {
+public class InvestigationsPublisherService {
+
+	private final NotificationsService notificationsService;
+	private final InvestigationsRepository repository;
+	private final InvestigationsReadService investigationsReadService;
+	private final AssetRepository assetRepository;
+	private final Clock clock;
+	private final InvestigationCommandInvoker investigationCommandInvoker;
+
+
+	public InvestigationsPublisherService(NotificationsService notificationsService, InvestigationsRepository repository, InvestigationsReadService investigationsReadService, AssetRepository assetRepository, Clock clock, InvestigationCommandInvoker investigationCommandInvoker) {
+		this.notificationsService = notificationsService;
+		this.repository = repository;
+		this.investigationsReadService = investigationsReadService;
+		this.assetRepository = assetRepository;
+		this.clock = clock;
+		this.investigationCommandInvoker = investigationCommandInvoker;
+	}
 
 	/**
 	 * Starts a new investigation with the given BPN, asset IDs and description.
