@@ -79,10 +79,6 @@ public class InvestigationsReceiverService {
 	}
 
 	private void validateNotificationReceiverCallback(EDCNotification edcNotification, BPN recipientBPN, BPN applicationBPN) {
-		if (!applicationBPN.equals(recipientBPN)) {
-			throw new InvestigationReceiverBpnMismatchException(applicationBPN, recipientBPN, edcNotification.getNotificationId());
-		}
-
 		NotificationType notificationType = edcNotification.convertNotificationType();
 
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
