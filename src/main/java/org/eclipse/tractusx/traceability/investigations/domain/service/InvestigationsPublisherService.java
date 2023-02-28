@@ -21,18 +21,18 @@
 
 package org.eclipse.tractusx.traceability.investigations.domain.service;
 
+import org.eclipse.tractusx.traceability.assets.domain.model.Asset;
 import org.eclipse.tractusx.traceability.assets.domain.ports.AssetRepository;
 import org.eclipse.tractusx.traceability.common.model.BPN;
-import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationId;
+import org.eclipse.tractusx.traceability.investigations.domain.model.*;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.CancelInvestigationHandler;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.CloseInvestigationHandler;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.SendInvestigationHandler;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.StartInvestigationHandler;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class InvestigationsPublisherService {
@@ -61,9 +61,24 @@ public class InvestigationsPublisherService {
 	 * @return the ID of the newly created investigation
 	 */
 	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
-		StartInvestigationHandler startInvestigationHandler = new StartInvestigationHandler(clock, bpn, assetIds,
-			description, repository, assetRepository);
-		return startInvestigationHandler.executeInvestigation();
+		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, description);
+
+		Map<String, List<Asset>> assetsByManufacturer = assetRepository.getAssetsById(assetIds).stream().collect(Collectors.groupingBy(Asset::getManufacturerId));
+
+		assetsByManufacturer.entrySet().stream()
+			.map(it -> new Notification(
+				UUID.randomUUID().toString(),
+				null,
+				bpn.value(),
+				it.getKey(),
+				null,
+				null,
+				description,
+				InvestigationStatus.RECEIVED,
+				it.getValue().stream().map(Asset::getId).map(AffectedPart::new).collect(Collectors.toList())
+			)).forEach(investigation::addNotification);
+
+		return repository.save(investigation);
 	}
 
 	/**
@@ -73,11 +88,10 @@ public class InvestigationsPublisherService {
 	 * @param id  the ID of the investigation to cancel
 	 */
 	public void cancelInvestigation(BPN bpn, Long id) {
-		CancelInvestigationHandler cancelInvestigationHandler = new CancelInvestigationHandler(repository,
-			investigationsReadService,
-			bpn,
-			id);
-		cancelInvestigationHandler.executeInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.cancel(bpn);
+		repository.update(investigation);
 	}
 
 	/**
@@ -87,12 +101,11 @@ public class InvestigationsPublisherService {
 	 * @param id  the ID of the investigation to send
 	 */
 	public void sendInvestigation(BPN bpn, Long id) {
-		SendInvestigationHandler sendInvestigationHandler = new SendInvestigationHandler(repository,
-			investigationsReadService,
-			notificationsService,
-			bpn,
-			id);
-		sendInvestigationHandler.executeInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.send(bpn);
+		repository.update(investigation);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 
 	/**
@@ -103,12 +116,10 @@ public class InvestigationsPublisherService {
 	 * @param reason the reason for closing the investigation
 	 */
 	public void closeInvestigation(BPN bpn, Long id, String reason) {
-		CloseInvestigationHandler closeInvestigationHandler = new CloseInvestigationHandler(investigationsReadService,
-			repository,
-			notificationsService,
-			bpn,
-			id,
-			reason);
-		closeInvestigationHandler.executeInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.close(bpn, reason);
+		repository.update(investigation);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 }
