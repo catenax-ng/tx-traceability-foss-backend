@@ -103,6 +103,10 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+		</dependency>
 		<!-- dependencies from Spring Boot -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -123,10 +127,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.security</groupId>
-			<artifactId>spring-security-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -302,12 +302,23 @@
 			<artifactId>postgresql</artifactId>
 			<version>1.17.6</version>
 		</dependency>
+		<!-- dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-bom</artifactId>
+			<version>2.2-M1-groovy-4.0</version>
+			<type>pom</type>
+		</dependency -->
 		<dependency>
 			<groupId>org.spockframework</groupId>
 			<artifactId>spock-core</artifactId>
 			<version>${spock.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-spring</artifactId>
+			<version>2.4-M1-groovy-4.0</version>
+		</dependency -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
@@ -541,6 +552,28 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-project-info-reports-plugin</artifactId>
 				<version>3.4.1</version>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<from>
+						<image>eclipse-temurin:17-jre-alpine@sha256:2b33ef284e6dc43a61903cef6d36dbce13414a9e5444e2c96cdd5e35123f9903</image>
+					</from>
+					<container>
+						<user>10000:1000</user>
+					</container>
+				</configuration>
+				<executions>
+					<execution>
+						<id>build-image</id>
+						<phase>install</phase>
+						<goals>
+							<goal>dockerBuild</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
