@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.5</version>
+		<version>${spring.boot.version}</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -21,7 +21,7 @@
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-
+		<spring.boot.version>2.7.7</spring.boot.version>
 		<!-- versions for Maven plugin -->
 		<asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
 		<checkstyle-plugin.version>3.2.1</checkstyle-plugin.version>
@@ -88,7 +88,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
-				<version>2.7.5</version>
+				<version>${spring.boot.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
@@ -123,17 +123,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
-			<exclusions>
-				<exclusion>
-					<groupId>org.springframework.security</groupId>
-					<artifactId>spring-security-web</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
-			<version>5.7.7</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -309,23 +302,12 @@
 			<artifactId>postgresql</artifactId>
 			<version>1.17.6</version>
 		</dependency>
-		<!-- dependency>
-			<groupId>org.spockframework</groupId>
-			<artifactId>spock-bom</artifactId>
-			<version>2.2-M1-groovy-4.0</version>
-			<type>pom</type>
-		</dependency -->
 		<dependency>
 			<groupId>org.spockframework</groupId>
 			<artifactId>spock-core</artifactId>
 			<version>${spock.version}</version>
 			<scope>test</scope>
 		</dependency>
-		<!-- dependency>
-			<groupId>org.spockframework</groupId>
-			<artifactId>spock-spring</artifactId>
-			<version>2.4-M1-groovy-4.0</version>
-		</dependency -->
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
