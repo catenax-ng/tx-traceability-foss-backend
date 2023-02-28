@@ -22,9 +22,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<start-class>org.eclipse.tractusx.traceability.TraceabilityApplication</start-class>
-		<mockito-junit-jupiter.version>4.6.0</mockito-junit-jupiter.version>
-
-		<!-- versions for Maven plugin -->
+			<!-- versions for Maven plugin -->
 		<asciidoctor.maven.plugin.version>2.2.2</asciidoctor.maven.plugin.version>
 		<checkstyle-plugin.version>3.2.1</checkstyle-plugin.version>
 		<compiler-plugin.version>3.10.1</compiler-plugin.version>
@@ -267,19 +265,16 @@
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-core</artifactId>
-			<version>4.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
-			<version>4.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-inline</artifactId>
-			<version>4.6.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -300,7 +295,6 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit5.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -574,7 +568,7 @@
 				<executions>
 					<execution>
 						<id>build-image</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<goals>
 							<goal>dockerBuild</goal>
 						</goals>
