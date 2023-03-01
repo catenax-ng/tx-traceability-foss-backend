@@ -47,16 +47,18 @@ public class InvestigationsReceiverService {
 	private final NotificationMapper notificationMapper;
 	private final InvestigationMapper investigationMapper;
 	private final TraceabilityProperties traceabilityProperties;
+	private final NotificationsService notificationsService;
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties) {
+										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties, NotificationsService notificationsService) {
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
 		this.notificationMapper = notificationMapper;
 		this.investigationMapper = investigationMapper;
 		this.traceabilityProperties = traceabilityProperties;
+		this.notificationsService = notificationsService;
 	}
 
 	public void handleNotificationReceiverCallback(EDCNotification edcNotification) {
@@ -106,7 +108,6 @@ public class InvestigationsReceiverService {
 		}
 
 		repository.update(investigation);
-
-		// TODO EDC communication
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 }

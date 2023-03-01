@@ -54,10 +54,11 @@ public class EDCNotificationValidator implements ConstraintValidator<ValidEDCNot
 		if (senderBPN == null) {
 			throw new InvestigationReceiverBpnMismatchException("BPN of sender cannot be null.");
 		}
-		if (!senderBPN.equals(applicationBPN.value())) {
+		if (!senderBPN.equals(applicationBPN.value()) || edcNotification.getRecipientBPN().equals(applicationBPN.value())) {
 			final String senderBPNIsNotSameAsReceiverError = String.format("BPN {%s} is not eligible to handle BPN: {%s}", applicationBPN.value(), senderBPN);
 			throw new InvestigationReceiverBpnMismatchException(senderBPNIsNotSameAsReceiverError);
 		}
+
 		return true;
 	}
 
