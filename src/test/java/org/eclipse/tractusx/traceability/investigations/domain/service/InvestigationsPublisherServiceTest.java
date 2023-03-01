@@ -107,7 +107,6 @@ class InvestigationsPublisherServiceTest {
 		// When
 		investigationsPublisherService.sendInvestigation(bpn, id);
 
-
 		// Then
 		verify(investigationsReadService).loadInvestigation(investigationId);
 		verify(repository).update(investigation);
