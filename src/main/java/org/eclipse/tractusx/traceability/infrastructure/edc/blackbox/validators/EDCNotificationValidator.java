@@ -17,50 +17,50 @@ import javax.validation.ConstraintValidatorContext;
  */
 @Component
 public class EDCNotificationValidator implements ConstraintValidator<ValidEDCNotification, EDCNotification> {
-	private final TraceabilityProperties traceabilityProperties;
+    private final TraceabilityProperties traceabilityProperties;
 
 
-	public EDCNotificationValidator(TraceabilityProperties traceabilityProperties) {
-		this.traceabilityProperties = traceabilityProperties;
-	}
+    public EDCNotificationValidator(TraceabilityProperties traceabilityProperties) {
+        this.traceabilityProperties = traceabilityProperties;
+    }
 
-	/**
-	 * Initializes the validator.
-	 *
-	 * @param constraintAnnotation the annotation that this validator is validating
-	 */
-	@Override
-	public void initialize(ValidEDCNotification constraintAnnotation) {
-		// No initialization needed
-	}
+    /**
+     * Initializes the validator.
+     *
+     * @param constraintAnnotation the annotation that this validator is validating
+     */
+    @Override
+    public void initialize(ValidEDCNotification constraintAnnotation) {
+        // No initialization needed
+    }
 
-	/**
-	 * Validates the specified {@link EDCNotification} object.
-	 *
-	 * @param edcNotification the {@link EDCNotification} object to validate
-	 * @param context         the {@link ConstraintValidatorContext} for creating validation messages
-	 * @return true if the validation succeeds
-	 * @throws InvestigationReceiverBpnMismatchException if the sender BPN is null or does not match the application BPN
-	 */
-	@Override
-	public boolean isValid(EDCNotification edcNotification, ConstraintValidatorContext context) {
-		// Will not be handled in this validation
-		if (edcNotification == null) {
-			return true;
-		}
-		BPN applicationBPN = traceabilityProperties.getBpn();
-		String senderBPN = edcNotification.getSenderBPN();
+    /**
+     * Validates the specified {@link EDCNotification} object.
+     *
+     * @param edcNotification the {@link EDCNotification} object to validate
+     * @param context         the {@link ConstraintValidatorContext} for creating validation messages
+     * @return true if the validation succeeds
+     * @throws InvestigationReceiverBpnMismatchException if the sender BPN is null or does not match the application BPN
+     */
+    @Override
+    public boolean isValid(EDCNotification edcNotification, ConstraintValidatorContext context) {
+        // Will not be handled in this validation
+        if (edcNotification == null) {
+            return true;
+        }
+        BPN applicationBPN = traceabilityProperties.getBpn();
+        String senderBPN = edcNotification.getSenderBPN();
+        String recipientBPN = edcNotification.getRecipientBPN();
+        if (senderBPN == null) {
+            throw new InvestigationReceiverBpnMismatchException("BPN of sender cannot be null.");
+        }
+        if (!senderBPN.equals(applicationBPN.value()) && !recipientBPN.equals(applicationBPN.value())) {
+            final String senderBPNIsNotSameAsReceiverError = String.format("BPN {%s} is not eligible to handle BPN: {%s}", applicationBPN.value(), senderBPN);
+            throw new InvestigationReceiverBpnMismatchException(senderBPNIsNotSameAsReceiverError);
+        }
 
-		if (senderBPN == null) {
-			throw new InvestigationReceiverBpnMismatchException("BPN of sender cannot be null.");
-		}
-		if (!senderBPN.equals(applicationBPN.value()) || edcNotification.getRecipientBPN().equals(applicationBPN.value())) {
-			final String senderBPNIsNotSameAsReceiverError = String.format("BPN {%s} is not eligible to handle BPN: {%s}", applicationBPN.value(), senderBPN);
-			throw new InvestigationReceiverBpnMismatchException(senderBPNIsNotSameAsReceiverError);
-		}
-
-		return true;
-	}
+        return true;
+    }
 
 
 }

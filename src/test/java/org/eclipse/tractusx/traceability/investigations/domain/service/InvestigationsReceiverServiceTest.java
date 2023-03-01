@@ -2,95 +2,225 @@ package org.eclipse.tractusx.traceability.investigations.domain.service;
 
 import org.eclipse.tractusx.traceability.common.mapper.InvestigationMapper;
 import org.eclipse.tractusx.traceability.common.mapper.NotificationMapper;
+import org.eclipse.tractusx.traceability.common.model.BPN;
 import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotification;
 import org.eclipse.tractusx.traceability.infrastructure.edc.blackbox.model.EDCNotificationFactory;
-import org.eclipse.tractusx.traceability.investigations.domain.model.AffectedPart;
-import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
-import org.eclipse.tractusx.traceability.investigations.domain.model.Notification;
+import org.eclipse.tractusx.traceability.investigations.domain.model.*;
+import org.eclipse.tractusx.traceability.investigations.domain.model.exception.NotificationStatusTransitionNotAllowed;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
+import org.eclipse.tractusx.traceability.testdata.InvestigationTestDataFactory;
 import org.eclipse.tractusx.traceability.testdata.NotificationTestDataFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class InvestigationsReceiverServiceTest {
 
-	@Mock
-	private InvestigationsRepository mockRepository;
+    @Mock
+    private InvestigationsRepository mockRepository;
 
-	@Mock
-	private InvestigationsReadService mockReadService;
+    @Mock
+    private InvestigationsReadService mockReadService;
 
-	@Mock
-	private NotificationMapper mockNotificationMapper;
+    @Mock
+    private NotificationMapper mockNotificationMapper;
 
-	@Mock
-	private InvestigationMapper mockInvestigationMapper;
+    @Mock
+    private InvestigationMapper mockInvestigationMapper;
 
-	@Mock
-	private TraceabilityProperties mockTraceabilityProperties;
+    @Mock
+    private TraceabilityProperties mockTraceabilityProperties;
 
-	@Mock
-	private NotificationsService mockNotificationsService;
+    @Mock
+    private NotificationsService mockNotificationsService;
 
-	@InjectMocks
-	private InvestigationsReceiverService service;
+    @InjectMocks
+    private InvestigationsReceiverService service;
 
 
-	@Test
-	@DisplayName("Test handleNotificationReceiverCallback when notification is invalid")
-	void testHandleNotificationReceiverCallbackInvalidNotification() {
+    @Test
+    @DisplayName("Test handleNotificationReceiverCallback close is valid")
+    void testHandleNotificationReceiverCallbackValidCloseNotification() {
 
-		// Given
-		List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
-		Notification notification = new Notification(
-			"123",
-			"id123",
-			"senderBPN",
-			"recipientBPN",
-			"senderAddress",
-			"agreement",
-			"information",
-			InvestigationStatus.CLOSED,
-			affectedParts
-		);
+        // Given
+        List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
+        Notification notification = new Notification(
+                "123",
+                "id123",
+                "senderBPN",
+                "recipientBPN",
+                "senderAddress",
+                "agreement",
+                "information",
+                InvestigationStatus.CLOSED,
+                affectedParts
+        );
 
-		EDCNotification edcNotification = EDCNotificationFactory.createQualityInvestigation(
-			"it", notification);
+        Investigation investigationTestData = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.RECEIVED, InvestigationStatus.RECEIVED, "recipientBPN");
 
-		// When
-		service.handleNotificationReceiverCallback(edcNotification);
-		// Then
+        EDCNotification edcNotification = EDCNotificationFactory.createQualityInvestigation(
+                "it", notification);
 
-	}
+        when(mockReadService.loadInvestigationByNotificationReferenceId(edcNotification.getNotificationId())).thenReturn(investigationTestData);
+        when(mockTraceabilityProperties.getBpn()).thenReturn(BPN.of("recipientBPN"));
 
-	@Test
-	@DisplayName("Test handleNotificationReceiverCallback when notification status is SENT")
-	void testHandleNotificationReceiverCallbackSent() {
-	/*	EDCNotification notification = new EDCNotification();
-		notification.setNotificationId(123L);
-		notification.setRecipientBPN("test_bpn");
-		notification.setInformation("test_info");
-		notification.setInvestigationStatus(InvestigationStatus.SENT.toString());
-		notification.setNotificationType(NotificationType.QMINVESTIGATION.toString());
+        // When
+        service.handleNotificationReceiverCallback(edcNotification);
+        // Then
+        Mockito.verify(mockRepository).update(investigationTestData);
+    }
 
-		Notification mockNotification = new Notification();
-		when(mockNotificationMapper.toReceiverNotification(any(EDCNotification.class))).thenReturn(mockNotification);
+    @Test
+    @DisplayName("Test handleNotificationReceiverCallback sent is valid")
+    void testHandleNotificationReceiverCallbackValidSentNotification() {
 
-		Investigation mockInvestigation = new Investigation();
-		when(mockInvestigationMapper.toReceiverInvestigation(any(BPN.class), any(String.class), any(Notification.class)))
-			.thenReturn(mockInvestigation);
+        // Given
+        List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
+        Notification notification = new Notification(
+                "123",
+                "id123",
+                "senderBPN",
+                "recipientBPN",
+                "senderAddress",
+                "agreement",
+                "information",
+                InvestigationStatus.SENT,
+                affectedParts
+        );
 
-		service.handleNotificationReceiverCallback(notification);
+        Investigation investigationTestData = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.RECEIVED, InvestigationStatus.RECEIVED, "recipientBPN");
+        Notification noticiationTestData = NotificationTestDataFactory.createNotificationTestData();
+        EDCNotification edcNotification = EDCNotificationFactory.createQualityInvestigation(
+                "it", notification);
 
-		verify(mockRepository, times(1)).save(mockInvestigation);*/
-	}
+        when(mockNotificationMapper.toReceiverNotification(edcNotification)).thenReturn(noticiationTestData);
+        when(mockInvestigationMapper.toReceiverInvestigation(any(BPN.class), anyString(), any(Notification.class))).thenReturn(investigationTestData);
+
+        // When
+        service.handleNotificationReceiverCallback(edcNotification);
+        // Then
+        Mockito.verify(mockRepository).save(investigationTestData);
+    }
+
+    @Test
+    @DisplayName("Test updateInvestigation is valid")
+    void testUpdateInvestigation() {
+
+        // Given
+        BPN bpn = BPN.of("recipientBPN");
+        Long investigationIdRaw = 1L;
+        InvestigationStatus status = InvestigationStatus.ACKNOWLEDGED;
+        String reason = "the update reason";
+
+        List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
+        Notification notification = new Notification(
+                "123",
+                "id123",
+                "senderBPN",
+                "recipientBPN",
+                "senderAddress",
+                "agreement",
+                "information",
+                InvestigationStatus.RECEIVED,
+                affectedParts
+        );
+
+        Notification notification2 = new Notification(
+                "456",
+                "id123",
+                "senderBPN",
+                "recipientBPN",
+                "senderAddress",
+                "agreement",
+                "information",
+                InvestigationStatus.RECEIVED,
+                affectedParts
+        );
+        List<Notification> notifications = new ArrayList<>();
+        notifications.add(notification);
+        notifications.add(notification2);
+
+        Investigation investigationTestData = InvestigationTestDataFactory.createInvestigationTestDataWithNotificationList(InvestigationStatus.RECEIVED, "recipientBPN", notifications);
+
+        when(mockReadService.loadInvestigation(any(InvestigationId.class))).thenReturn(investigationTestData);
+
+        // When
+        service.updateInvestigation(bpn, investigationIdRaw, status, reason);
+
+        // Then
+        Mockito.verify(mockRepository).update(investigationTestData);
+        Mockito.verify(mockNotificationsService, times(2)).updateAsync(any(Notification.class));
+    }
+
+    @Test
+    @DisplayName("Test updateInvestigation is invalid because notification status transition not allowed")
+    void testUpdateInvestigationInvalid() {
+
+        // Given
+        BPN bpn = BPN.of("recipientBPN");
+        Long investigationIdRaw = 1L;
+        InvestigationStatus status = InvestigationStatus.ACKNOWLEDGED;
+        String reason = "the update reason";
+
+        List<AffectedPart> affectedParts = List.of(new AffectedPart("partId"));
+        Notification notification = new Notification(
+                "123",
+                "id123",
+                "senderBPN",
+                "recipientBPN",
+                "senderAddress",
+                "agreement",
+                "information",
+                InvestigationStatus.CREATED,
+                affectedParts
+        );
+
+        List<Notification> notifications = new ArrayList<>();
+        notifications.add(notification);
+
+        Investigation investigationTestData = InvestigationTestDataFactory.createInvestigationTestDataWithNotificationList(InvestigationStatus.RECEIVED, "recipientBPN", notifications);
+
+        when(mockReadService.loadInvestigation(any(InvestigationId.class))).thenReturn(investigationTestData);
+
+        // When
+        assertThrows(NotificationStatusTransitionNotAllowed.class, () -> {
+            service.updateInvestigation(bpn, investigationIdRaw, status, reason);
+        });
+
+        // Then
+        Mockito.verify(mockRepository, never()).update(investigationTestData);
+        Mockito.verify(mockNotificationsService, never()).updateAsync(any(Notification.class));
+    }
 
 }
+
+/*
+
+
+	public void updateInvestigation(BPN bpn, Long investigationIdRaw, InvestigationStatus status, String reason) {
+		Investigation investigation = investigationsReadService.loadInvestigation(new InvestigationId(investigationIdRaw));
+
+		switch (status) {
+			case ACKNOWLEDGED -> investigation.acknowledge(bpn);
+			case ACCEPTED -> investigation.accept(bpn, reason);
+			case DECLINED -> investigation.decline(bpn, reason);
+			default -> throw new InvestigationIllegalUpdate("Can't update %s investigation with %s status".formatted(investigationIdRaw, status));
+		}
+
+		repository.update(investigation);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
+	}*/
