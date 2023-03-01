@@ -116,12 +116,12 @@ jobs:
       - name: Downloading unit test results
         uses: actions/download-artifact@v3
         with:
-          name: unit-test
+          name: jacoco-unit-test
 
       - name: Downloading integration test results
         uses: actions/download-artifact@v3
         with:
-          name: integration-test
+          name: jacoco-integration-test
 
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
