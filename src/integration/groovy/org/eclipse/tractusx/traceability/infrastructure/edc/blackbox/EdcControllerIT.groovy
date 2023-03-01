@@ -110,7 +110,7 @@ class EdcControllerIT extends IntegrationSpecification implements TestDataSuppor
 				"\t\t\"notificationId\": \"notificationReferenceId\",\n" +
 				"\t\t\"senderBPN\": \"NOT_SAME_AS_APP_BPN\",\n" +
 				"\t\t\"senderAddress\": \"https://some-url.com\",\n" +
-				"\t\t\"recipientBPN\": \"BPNL00000003AXS3\",\n" +
+				"\t\t\"recipientBPN\": \"NOT_SAME_AS_APP_BPN\",\n" +
 				"\t\t\"classification\": \"QM-Investigation\",\n" +
 				"\t\t\"severity\": \"CRITICAL\",\n" +
 				"\t\t\"relatedNotificationId\": \"\",\n" +
