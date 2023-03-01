@@ -113,7 +113,14 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      - uses: actions/download-artifact@v3
+      - name: Downloading unit and integration test results
+        uses: actions/download-artifact@v3
+        with:
+          name: test-artifacts
+          path: |
+            integration-test
+            unit-test
+
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
@@ -130,7 +137,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
           SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
-        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode clean package sonar:sonar -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode clean package sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=jacoco-integration-test/jacoco.xml,jacoco-integration-test/jacoco.xml -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
 
   Dependency-analysis:
     needs: ["Sonar-Cloud-analyze"]
