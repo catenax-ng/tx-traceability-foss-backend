@@ -57,7 +57,7 @@
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-		<sonar.jacoco.reportsPaths>/target/jacoco-ut.exec</sonar.jacoco.reportsPaths>
+		<sonar.jacoco.reportsPaths>/target/jacoco.exec</sonar.jacoco.reportsPaths>
 		<sonar.tests>src/test/java</sonar.tests>
 		<sonar.projectKey>catenax-ng_product-traceability-foss-backend</sonar.projectKey>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
