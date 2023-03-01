@@ -57,7 +57,10 @@
 		<!-- Sonar related properties -->
 		<sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-		<sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml
+		<sonar.coverage.jacoco.xmlReportPaths>${GITHUB_WORKSPACE}/target/site/jacoco/jacoco.xml,
+			target/site/jacoco/jacoco.xml,
+			target/site/jacoco-it/jacoco.xml,
+			/home/runner/work/tx-traceability-foss-backend/tx-traceability-foss-backend/target/jacoco/*.xml
 		</sonar.coverage.jacoco.xmlReportPaths>
 		<sonar.jacoco.reportsPaths>${project.build.directory}/jacoco-ut.exec</sonar.jacoco.reportsPaths>
 		<sonar.tests>src/test/java</sonar.tests>
