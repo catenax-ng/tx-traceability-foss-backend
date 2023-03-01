@@ -59,7 +59,7 @@ The commit messages have to match a pattern in the form of:
 Example:
 ``feat(users): TRACEFOSS-XXX Description``
 
-Detailed pattern can be found here: [commit-msg](./dev/commit-msg)
+The detailed pattern can be found here: [commit-msg](./dev/commit-msg)
 
 #### How to use
 ```shell
