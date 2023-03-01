@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.time.Clock;
 
 @Component
 public class InvestigationsReceiverService {
