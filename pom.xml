@@ -470,13 +470,11 @@
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
-                        <!-- attached to Maven test phase -->
                         <phase>pre-integration-test</phase>
                     </execution>
-
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
@@ -848,6 +846,11 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+                            </systemPropertyVariables>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
