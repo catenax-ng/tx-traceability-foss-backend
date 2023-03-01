@@ -1,6 +1,6 @@
 package org.eclipse.tractusx.traceability.infrastructure.edc.blackbox
 
-import com.fasterxml.jackson.databind.ObjectMapper
+
 import io.restassured.http.ContentType
 import org.eclipse.tractusx.traceability.IntegrationSpecification
 import org.eclipse.tractusx.traceability.common.security.JwtRole
@@ -11,16 +11,12 @@ import org.eclipse.tractusx.traceability.infrastructure.jpa.investigation.Invest
 import org.eclipse.tractusx.traceability.infrastructure.jpa.notification.NotificationEntity
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationSide
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus
-import org.springframework.beans.factory.annotation.Autowired
 
 import java.time.Instant
 
 import static io.restassured.RestAssured.given
 
 class EdcControllerIT extends IntegrationSpecification implements TestDataSupport, NotificationsSupport, InvestigationsSupport {
-
-	@Autowired
-	private ObjectMapper objectMapper
 
 	def "should call the /qualitynotifications/receive api successfully "() {
 		given:
