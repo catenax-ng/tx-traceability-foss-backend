@@ -29,11 +29,11 @@ jobs:
         run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode clean test
 
       - name: Upload unit test results
-          if: always()
-          uses: actions/upload-artifact@v3
-          with:
-            name: jacoco-unit-test
-            path: target/site/jacoco-unittest/jacoco.xml
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: jacoco-unit-test
+          path: target/site/jacoco-unittest/jacoco.xml
 
       - name: Publish unit test results
         uses: EnricoMi/publish-unit-test-result-action@v2
