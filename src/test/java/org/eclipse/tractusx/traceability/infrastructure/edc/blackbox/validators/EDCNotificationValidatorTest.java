@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class EDCNotificationValidatorTest {
+class EDCNotificationValidatorTest {
 
 
 	@Mock
@@ -33,7 +33,7 @@ public class EDCNotificationValidatorTest {
 	EDCNotificationValidator validator;
 
 	@Test
-	public void testIsValidWithNullEDCNotification() {
+	void testIsValidWithNullEDCNotification() {
 		// Given
 		EDCNotification edcNotification = null;
 
@@ -46,7 +46,7 @@ public class EDCNotificationValidatorTest {
 	}
 
 	@Test
-	public void testIsValidWithValidEDCNotification() {
+	void testIsValidWithValidEDCNotification() {
 		// Given
 		when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
 		when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_SENDER");
@@ -59,7 +59,7 @@ public class EDCNotificationValidatorTest {
 	}
 
 	@Test
-	public void testIsValidWithInvalidEDCNotification() {
+	void testIsValidWithInvalidEDCNotification() {
 		// Given
 		when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
 		when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_APPLICATION");

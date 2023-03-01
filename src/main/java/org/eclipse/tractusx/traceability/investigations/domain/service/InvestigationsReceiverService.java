@@ -52,7 +52,7 @@ public class InvestigationsReceiverService {
 
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties, Clock clock) {
+										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties) {
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
 		this.notificationMapper = notificationMapper;

@@ -40,7 +40,7 @@ class InvestigationsPublisherServiceTest {
 	private NotificationsService notificationsService;
 
 	@Test
-	public void testStartInvestigationSuccessful() {
+	void testStartInvestigationSuccessful() {
 		// Given
 		Investigation investigation = InvestigationTestDataFactory.createInvestigationTestData(InvestigationStatus.ACKNOWLEDGED, InvestigationStatus.CLOSED);
 		when(assetRepository.getAssetsById(Arrays.asList("asset-1", "asset-2"))).thenReturn(List.of(AssetTestDataFactory.createAssetTestData()));
@@ -56,7 +56,7 @@ class InvestigationsPublisherServiceTest {
 	}
 
 	@Test
-	public void testCancelInvestigationSuccessful() {
+	void testCancelInvestigationSuccessful() {
 		// Given
 		BPN bpn = new BPN("bpn123");
 		Long id = 1L;
@@ -70,7 +70,7 @@ class InvestigationsPublisherServiceTest {
 		// Then
 		verify(investigationsReadService).loadInvestigation(new InvestigationId(id));
 		verify(repository).update(investigation);
-		assertEquals(investigation.getInvestigationStatus(), InvestigationStatus.CANCELED);
+		assertEquals(InvestigationStatus.CANCELED, investigation.getInvestigationStatus());
 	}
 
 	@Test

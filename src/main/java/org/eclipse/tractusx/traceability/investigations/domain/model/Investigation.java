@@ -58,7 +58,6 @@ public class Investigation {
 	private Instant createdAt;
 	private List<String> assetIds;
 	private Map<String, Notification> notifications;
-	private List<Notification> notificationList;
 	private String sendTo;
 
 	private String closeReason;
@@ -254,10 +253,5 @@ public class Investigation {
 			.map(AffectedPart::assetId)
 			.forEach(assetIds::add);
 	}
-
-	public Instant getCreatedAt() {
-		return createdAt;
-	}
-
-
+	
 }
