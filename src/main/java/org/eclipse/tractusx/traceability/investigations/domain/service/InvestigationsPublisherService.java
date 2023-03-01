@@ -21,23 +21,36 @@
 
 package org.eclipse.tractusx.traceability.investigations.domain.service;
 
+import org.eclipse.tractusx.traceability.assets.domain.model.Asset;
 import org.eclipse.tractusx.traceability.assets.domain.ports.AssetRepository;
 import org.eclipse.tractusx.traceability.common.model.BPN;
-import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationId;
+import org.eclipse.tractusx.traceability.investigations.domain.model.*;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
-import org.eclipse.tractusx.traceability.investigations.domain.service.command.*;
 import org.springframework.stereotype.Service;
 
 import java.time.Clock;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-public record InvestigationsPublisherService(
-	NotificationsService notificationsService,
-	InvestigationsRepository repository,
-	InvestigationsReadService investigationsReadService,
-	AssetRepository assetRepository, Clock clock,
-	InvestigationCommandInvoker investigationCommandInvoker) {
+public class InvestigationsPublisherService {
+
+	private final NotificationsService notificationsService;
+	private final InvestigationsRepository repository;
+	private final InvestigationsReadService investigationsReadService;
+	private final AssetRepository assetRepository;
+	private final Clock clock;
+
+
+	public InvestigationsPublisherService(NotificationsService notificationsService, InvestigationsRepository repository, InvestigationsReadService investigationsReadService, AssetRepository assetRepository, Clock clock) {
+		this.notificationsService = notificationsService;
+		this.repository = repository;
+		this.investigationsReadService = investigationsReadService;
+		this.assetRepository = assetRepository;
+		this.clock = clock;
+	}
 
 	/**
 	 * Starts a new investigation with the given BPN, asset IDs and description.
@@ -48,10 +61,24 @@ public record InvestigationsPublisherService(
 	 * @return the ID of the newly created investigation
 	 */
 	public InvestigationId startInvestigation(BPN bpn, List<String> assetIds, String description) {
-		StartInvestigationCommand startInvestigationCommand = new StartInvestigationCommand(clock, bpn, assetIds,
-			description, repository, assetRepository);
-		this.investigationCommandInvoker.setCommand(startInvestigationCommand);
-		return this.investigationCommandInvoker.handleInvestigation();
+		Investigation investigation = Investigation.startInvestigation(clock.instant(), bpn, description);
+
+		Map<String, List<Asset>> assetsByManufacturer = assetRepository.getAssetsById(assetIds).stream().collect(Collectors.groupingBy(Asset::getManufacturerId));
+
+		assetsByManufacturer.entrySet().stream()
+			.map(it -> new Notification(
+				UUID.randomUUID().toString(),
+				null,
+				bpn.value(),
+				it.getKey(),
+				null,
+				null,
+				description,
+				InvestigationStatus.RECEIVED,
+				it.getValue().stream().map(Asset::getId).map(AffectedPart::new).collect(Collectors.toList())
+			)).forEach(investigation::addNotification);
+
+		return repository.save(investigation);
 	}
 
 	/**
@@ -61,12 +88,10 @@ public record InvestigationsPublisherService(
 	 * @param id  the ID of the investigation to cancel
 	 */
 	public void cancelInvestigation(BPN bpn, Long id) {
-		CancelInvestigationCommand cancelInvestigationCommand = new CancelInvestigationCommand(repository,
-			investigationsReadService,
-			bpn,
-			id);
-		this.investigationCommandInvoker.setCommand(cancelInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.cancel(bpn);
+		repository.update(investigation);
 	}
 
 	/**
@@ -76,13 +101,11 @@ public record InvestigationsPublisherService(
 	 * @param id  the ID of the investigation to send
 	 */
 	public void sendInvestigation(BPN bpn, Long id) {
-		SendInvestigationCommand sendInvestigationCommand = new SendInvestigationCommand(repository,
-			investigationsReadService,
-			notificationsService,
-			bpn,
-			id);
-		this.investigationCommandInvoker.setCommand(sendInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.send(bpn);
+		repository.update(investigation);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 
 	/**
@@ -93,13 +116,10 @@ public record InvestigationsPublisherService(
 	 * @param reason the reason for closing the investigation
 	 */
 	public void closeInvestigation(BPN bpn, Long id, String reason) {
-		CloseInvestigationCommand closeInvestigationCommand = new CloseInvestigationCommand(investigationsReadService,
-			repository,
-			notificationsService,
-			bpn,
-			id,
-			reason);
-		this.investigationCommandInvoker.setCommand(closeInvestigationCommand);
-		this.investigationCommandInvoker.handleInvestigation();
+		InvestigationId investigationId = new InvestigationId(id);
+		Investigation investigation = investigationsReadService.loadInvestigation(investigationId);
+		investigation.close(bpn, reason);
+		repository.update(investigation);
+		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
 }

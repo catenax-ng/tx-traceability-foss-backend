@@ -32,14 +32,12 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 import org.eclipse.tractusx.traceability.investigations.domain.model.Notification;
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
-import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationReceiverBpnMismatchException;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
-import java.time.Clock;
 
 @Component
 public class InvestigationsReceiverService {
@@ -53,7 +51,7 @@ public class InvestigationsReceiverService {
 
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties, Clock clock) {
+										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties) {
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
 		this.notificationMapper = notificationMapper;
@@ -61,14 +59,12 @@ public class InvestigationsReceiverService {
 		this.traceabilityProperties = traceabilityProperties;
 	}
 
-	// TODO: Investigation Receiver
 	public void handleNotificationReceiverCallback(EDCNotification edcNotification) {
 		logger.info("Received notification response with id {}", edcNotification.getNotificationId());
 
 		BPN recipientBPN = BPN.of(edcNotification.getRecipientBPN());
-		BPN applicationBPN = traceabilityProperties.getBpn();
 
-		validateNotificationReceiverCallback(edcNotification, recipientBPN, applicationBPN);
+		validateNotificationReceiverCallback(edcNotification);
 
 		InvestigationStatus investigationStatus = edcNotification.convertInvestigationStatus();
 
@@ -79,15 +75,9 @@ public class InvestigationsReceiverService {
 		}
 	}
 
-	private void validateNotificationReceiverCallback(EDCNotification edcNotification, BPN recipientBPN, BPN applicationBPN) {
-		// TODO this should be already handled in the rest controller if possible
-		if (!applicationBPN.equals(recipientBPN)) {
-			throw new InvestigationReceiverBpnMismatchException(applicationBPN, recipientBPN, edcNotification.getNotificationId());
-		}
-
+	private void validateNotificationReceiverCallback(EDCNotification edcNotification) {
 		NotificationType notificationType = edcNotification.convertNotificationType();
 
-		// TODO this should be already handled in the rest controller if possible
 		if (!notificationType.equals(NotificationType.QMINVESTIGATION)) {
 			throw new InvestigationIllegalUpdate("Received %s classified edc notification which is not an investigation".formatted(notificationType));
 		}
@@ -99,7 +89,6 @@ public class InvestigationsReceiverService {
 		repository.save(investigation);
 	}
 
-	// TODO: Investigation Receiver
 	private void closeInvestigation(EDCNotification edcNotification) {
 		Investigation investigation = investigationsReadService.loadInvestigationByNotificationReferenceId(edcNotification.getNotificationId());
 		investigation.close(traceabilityProperties.getBpn(), edcNotification.getInformation());

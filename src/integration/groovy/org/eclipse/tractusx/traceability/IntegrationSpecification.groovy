@@ -75,12 +75,6 @@ abstract class IntegrationSpecification extends Specification
 	private JpaNotificationRepository jpaNotificationRepository
 
 	@Autowired
-	private NotificationMapper notificationMapper;
-
-	@Autowired
-	private InvestigationMapper investigationMapper;
-
-	@Autowired
 	private JdbcTemplate jdbcTemplate
 
 	def setup() {
