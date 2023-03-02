@@ -26,10 +26,10 @@ jobs:
           cache: 'maven'
 
       - name: Run unit tests
-        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode clean test
+        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode test
 
       - name: Run integration tests
-        run: mvn --quiet --batch-mode -PiT clean verify
+        run: mvn --quiet --batch-mode -PiT verify
 
       - name: Publish integration test results
         uses: EnricoMi/publish-unit-test-result-action@v2
@@ -52,13 +52,13 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Build and Sonar Scan
+      - name: Verify Sonar Scan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_ORGANIZATION: ${{ vars.SONAR_ORGANIZATION }}
           SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
-        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode package sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-integration/jacoco.xml,target/site/jacoco-unittest/jacoco.xml -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
+        run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode verify -DskipTests sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-integration/jacoco.xml,target/site/jacoco-unittest/jacoco.xml -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
 
   Publish-docker-image:
     needs: ["Test-and-Sonar"]
