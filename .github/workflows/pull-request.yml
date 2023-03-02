@@ -106,9 +106,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Display structure of artifacts
-        run: cat jacoco-integration-test/jacoco.xml
-
       - name: Build and Sonar Scan
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
