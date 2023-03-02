@@ -61,7 +61,7 @@ jobs:
         run: mvn -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn --batch-mode package sonar:sonar -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco-integration/jacoco.xml,target/site/jacoco-unittest/jacoco.xml -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }}
 
   Publish-docker-image:
-    needs: ["Unit-test", "Integration-test"]
+    needs: ["Test-and-Sonar"]
     runs-on: ubuntu-latest
     permissions:
       contents: read
