@@ -57,5 +57,14 @@ public class EdcController {
 		logger.info("EdcController [qualityNotificationReceive] notificationId:{}", edcNotification);
 		investigationsReceiverService.handleNotificationReceiverCallback(edcNotification);
 	}
+
+	/**
+	 * Receiver API call for EDC Transfer
+	 */
+	@PostMapping("/qualitynotifications/update")
+	public void qualityNotificationUpdate(final @ValidEDCNotification @Valid @RequestBody EDCNotification edcNotification) {
+		logger.info("EdcController [qualityNotificationUpdate] notificationId:{}", edcNotification);
+		investigationsReceiverService.handleNotificationReceiverCallback(edcNotification);
+	}
 }
 
