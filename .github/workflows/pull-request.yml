@@ -12,7 +12,7 @@ env:
   COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
 
 jobs:
-  Testing & Build & Sonar:
+  Testing and Build and Sonar:
     permissions:
       checks: write
       pull-requests: write
