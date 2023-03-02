@@ -459,6 +459,23 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <exclude>org/eclipse/tractusx/traceability/generated/**,
+                            org/eclipse/tractusx/traceability/openapi/**
+                        </exclude>
+                        <exclude>org/eclipse/tractusx/traceability/TraceabilityApplication.java</exclude>
+                        <exclude>
+                            org/eclipse/tractusx/traceability/common/**,org/eclipse/tractusx/traceability/infrastructure/**
+                        </exclude>
+                        <exclude>org/eclipse/tractusx/traceability/assets/domain/model/**</exclude>
+                        <exclude>org/eclipse/tractusx/traceability/assets/infrastructure/**</exclude>
+                        <exclude>org/eclipse/tractusx/traceability/assets/config/**</exclude>
+                        <exclude>org/eclipse/tractusx/traceability/investigations/domain/model/**</exclude>
+                        <exclude>org/eclipse/tractusx/traceability/investigations/adapters/**</exclude>
+                        <exclude>org/eclipse/tractusx/traceability/infrastructure/edc/blackbox/**</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
