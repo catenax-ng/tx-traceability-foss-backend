@@ -76,16 +76,21 @@ public class EdcService {
 			throw new BadRequestException("Provider has no contract offers for us. Catalog is empty.");
 		}
 		logger.info(":::: Find Notification contract method[findNotificationContractOffer] total catalog ::{}", catalog.getContractOffers().size());
+
 		return catalog.getContractOffers().stream()
 			.filter(it -> isPropertyQualityInvestigationType(it.getAsset()) && isPropertyUpdateNotificationMethod(it.getAsset())).findAny();
 	}
 
 	private boolean isPropertyQualityInvestigationType(Asset asset) {
-		return Constants.ASSET_VALUE_NOTIFICATION_METHOD_UPDATE.equals(asset.getPropertyNotificationType());
+		String formatted = String.format(":::: Asset %s has value %s", Constants.ASSET_KEY_NOTIFICATION_TYPE, asset.getPropertyNotificationType());
+		logger.info(formatted);
+		return Constants.ASSET_VALUE_QUALITY_INVESTIGATION.equals(asset.getPropertyNotificationType());
 	}
 
 	private boolean isPropertyUpdateNotificationMethod(Asset asset) {
-		return Constants.ASSET_VALUE_QUALITY_INVESTIGATION.equals(asset.getPropertyNotificationMethod());
+		String formatted = String.format(":::: Asset isPropertyUpdateNotificationMethod %s has value %s", "asset:prop:notificationmethod", asset.getPropertyNotificationMethod());
+		logger.info(formatted);
+		return Constants.ASSET_VALUE_NOTIFICATION_METHOD_UPDATE.equals(asset.getPropertyNotificationMethod());
 	}
 
 	/**
