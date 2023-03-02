@@ -510,7 +510,7 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-plugin.version}</version>
                 <configuration>
-                    <excludes>
+                  <!--  <excludes>
                         <exclude>org/eclipse/tractusx/traceability/generated/**,
                             org/eclipse/tractusx/traceability/openapi/**
                         </exclude>
@@ -524,7 +524,7 @@
                         <exclude>org/eclipse/tractusx/traceability/investigations/domain/model/**</exclude>
                         <exclude>org/eclipse/tractusx/traceability/investigations/adapters/**</exclude>
                         <exclude>org/eclipse/tractusx/traceability/infrastructure/edc/blackbox/**</exclude>
-                    </excludes>
+                    </excludes>-->
                 </configuration>
                 <executions>
                     <execution>
