@@ -40,7 +40,6 @@ import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class InvestigationsReceiverService {
@@ -130,7 +129,7 @@ public class InvestigationsReceiverService {
 	private List<Notification> invalidNotifications(final Investigation investigation, final BPN applicationBpn) {
 		final String applicationBpnValue = applicationBpn.value();
 		return investigation.getNotifications().stream()
-			.filter(notification -> !notification.getReceiverBpnNumber().equals(applicationBpnValue)).collect(Collectors.toList());
+			.filter(notification -> !notification.getReceiverBpnNumber().equals(applicationBpnValue)).toList();
 	}
 
 
