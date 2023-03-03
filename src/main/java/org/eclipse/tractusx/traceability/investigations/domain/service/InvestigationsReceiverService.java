@@ -47,12 +47,14 @@ public class InvestigationsReceiverService {
 	private final NotificationMapper notificationMapper;
 	private final InvestigationMapper investigationMapper;
 	private final TraceabilityProperties traceabilityProperties;
-	private final NotificationsService notificationsService;
 	private static final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	private final NotificationsService notificationsService;
+
 
 	public InvestigationsReceiverService(InvestigationsRepository repository,
 										 InvestigationsReadService investigationsReadService,
-										 NotificationMapper notificationMapper, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties, NotificationsService notificationsService) {
+										 NotificationMapper notificationMapper, NotificationsService notificationsService, InvestigationMapper investigationMapper, TraceabilityProperties traceabilityProperties) {
+
 		this.repository = repository;
 		this.investigationsReadService = investigationsReadService;
 		this.notificationMapper = notificationMapper;

@@ -17,22 +17,22 @@ import javax.validation.ConstraintValidatorContext;
  */
 @Component
 public class EDCNotificationValidator implements ConstraintValidator<ValidEDCNotification, EDCNotification> {
-    private final TraceabilityProperties traceabilityProperties;
+	private final TraceabilityProperties traceabilityProperties;
 
 
-    public EDCNotificationValidator(TraceabilityProperties traceabilityProperties) {
-        this.traceabilityProperties = traceabilityProperties;
-    }
+	public EDCNotificationValidator(TraceabilityProperties traceabilityProperties) {
+		this.traceabilityProperties = traceabilityProperties;
+	}
 
-    /**
-     * Initializes the validator.
-     *
-     * @param constraintAnnotation the annotation that this validator is validating
-     */
-    @Override
-    public void initialize(ValidEDCNotification constraintAnnotation) {
-        // No initialization needed
-    }
+	/**
+	 * Initializes the validator.
+	 *
+	 * @param constraintAnnotation the annotation that this validator is validating
+	 */
+	@Override
+	public void initialize(ValidEDCNotification constraintAnnotation) {
+		// No initialization needed
+	}
 
     /**
      * Validates the specified {@link EDCNotification} object.

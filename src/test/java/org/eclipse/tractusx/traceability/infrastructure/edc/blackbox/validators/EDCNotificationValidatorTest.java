@@ -23,54 +23,53 @@ class EDCNotificationValidatorTest {
     @Mock
     TraceabilityProperties traceabilityProperties;
 
-    @Mock
-    ConstraintValidatorContext context;
+	@Mock
+	ConstraintValidatorContext context;
 
-    @Mock
-    EDCNotification edcNotification;
+	@Mock
+	EDCNotification edcNotification;
 
-    @InjectMocks
-    EDCNotificationValidator validator;
+	@InjectMocks
+	EDCNotificationValidator validator;
 
-    @Test
-    void testIsValidWithNullEDCNotification() {
-        // Given
-        EDCNotification edcNotification = null;
+	@Test
+	void testIsValidWithNullEDCNotification() {
+		// Given
+		EDCNotification edcNotification = null;
 
-        // When
-        boolean result = validator.isValid(edcNotification, context);
+		// When
+		boolean result = validator.isValid(edcNotification, context);
 
-        // Then
-        assertTrue(result);
+		// Then
+		assertTrue(result);
 
-    }
+	}
 
-    @Test
-    void testReceiverAndRecipientNotApplicationOwner() {
-        // Given
-        when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
-        when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_SENDER");
-        when(edcNotification.getRecipientBPN()).thenReturn("BPN_OF_RECIPIENT");
-        // When
-        // Then
-        assertThrows(InvestigationReceiverBpnMismatchException.class, () -> {
-            validator.isValid(edcNotification, context);
-        });
-    }
+	@Test
+	void testIsValidWithValidEDCNotification() {
+		// Given
+		when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
+		when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_SENDER");
 
-    @Test
-    void testSenderIsApplicationOwner() {
-        // Given
-        when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
-        when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_APPLICATION");
-        when(edcNotification.getRecipientBPN()).thenReturn("OTHER");
+		// When
+		// Then
+		assertThrows(InvestigationReceiverBpnMismatchException.class, () -> {
+			validator.isValid(edcNotification, context);
+		});
+	}
 
-        // When
-        boolean result = validator.isValid(edcNotification, context);
+	@Test
+	void testIsValidWithInvalidEDCNotification() {
+		// Given
+		when(traceabilityProperties.getBpn()).thenReturn(BPN.of("BPN_OF_APPLICATION"));
+		when(edcNotification.getSenderBPN()).thenReturn("BPN_OF_APPLICATION");
 
-        // Then
-        assertTrue(result);
-    }
+		// When
+		boolean result = validator.isValid(edcNotification, context);
+
+		// Then
+		assertTrue(result);
+	}
 
     @Test
     void testReceiverIsApplicationOwner() {

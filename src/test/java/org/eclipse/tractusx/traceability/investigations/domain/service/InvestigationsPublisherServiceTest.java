@@ -112,5 +112,4 @@ class InvestigationsPublisherServiceTest {
         verify(repository).update(investigation);
         verify(notificationsService).updateAsync(any());
     }
-
 }
