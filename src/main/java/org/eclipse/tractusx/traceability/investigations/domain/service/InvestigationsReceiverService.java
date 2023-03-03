@@ -117,9 +117,9 @@ public class InvestigationsReceiverService {
 
 
 		switch (status) {
-			case ACKNOWLEDGED -> investigation.acknowledge(applicationBpn);
-			case ACCEPTED -> investigation.accept(applicationBpn, reason);
-			case DECLINED -> investigation.decline(applicationBpn, reason);
+			case ACKNOWLEDGED -> investigation.acknowledge();
+			case ACCEPTED -> investigation.accept(reason);
+			case DECLINED -> investigation.decline(reason);
 			default -> throw new InvestigationIllegalUpdate("Can't update %s investigation with %s status".formatted(investigationIdRaw, status));
 		}
 
