@@ -22,10 +22,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertThrows;
+
 
 @ExtendWith(MockitoExtension.class)
 class InvestigationsReceiverServiceTest {
@@ -208,19 +209,3 @@ class InvestigationsReceiverServiceTest {
 
 }
 
-/*
-
-
-	public void updateInvestigation(BPN bpn, Long investigationIdRaw, InvestigationStatus status, String reason) {
-		Investigation investigation = investigationsReadService.loadInvestigation(new InvestigationId(investigationIdRaw));
-
-		switch (status) {
-			case ACKNOWLEDGED -> investigation.acknowledge(bpn);
-			case ACCEPTED -> investigation.accept(bpn, reason);
-			case DECLINED -> investigation.decline(bpn, reason);
-			default -> throw new InvestigationIllegalUpdate("Can't update %s investigation with %s status".formatted(investigationIdRaw, status));
-		}
-
-		repository.update(investigation);
-		investigation.getNotifications().forEach(notificationsService::updateAsync);
-	}*/

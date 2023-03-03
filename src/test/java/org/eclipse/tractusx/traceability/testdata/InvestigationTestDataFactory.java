@@ -45,7 +45,7 @@ public class InvestigationTestDataFactory {
     }
 
 
-    public static Investigation createInvestigationTestDataWithNotificationList(InvestigationStatus investigationStatus, final String bpnString, final List<Notification> notifications) {
+    public static Investigation createInvestigationTestDataWithNotificationList(InvestigationStatus investigationStatus, String bpnString, List<Notification> notifications) {
         InvestigationId investigationId = new InvestigationId(1L);
         BPN bpn = new BPN(bpnString);
         InvestigationSide investigationSide = InvestigationSide.SENDER;
