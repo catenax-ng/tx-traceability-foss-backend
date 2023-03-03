@@ -32,12 +32,15 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 import org.eclipse.tractusx.traceability.investigations.domain.model.Notification;
 import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationIllegalUpdate;
+import org.eclipse.tractusx.traceability.investigations.domain.model.exception.InvestigationReceiverBpnMismatchException;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.lang.invoke.MethodHandles;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class InvestigationsReceiverService {
@@ -99,17 +102,36 @@ public class InvestigationsReceiverService {
 		repository.update(investigation);
 	}
 
-	public void updateInvestigation(BPN bpn, Long investigationIdRaw, InvestigationStatus status, String reason) {
+	public void updateInvestigation(BPN applicationBpn, Long investigationIdRaw, InvestigationStatus status, String reason) {
 		Investigation investigation = investigationsReadService.loadInvestigation(new InvestigationId(investigationIdRaw));
+		List<Notification> invalidNotifications = invalidNotifications(investigation, applicationBpn);
+
+		if (!invalidNotifications.isEmpty()) {
+			StringBuilder builder = new StringBuilder("Investigation receiverBpnNumber mismatch for notifications with IDs: ");
+			for (Notification notification : invalidNotifications) {
+				builder.append(notification.getId()).append(", ");
+			}
+			builder.delete(builder.length() - 2, builder.length()); // Remove the last ", " from the string
+			throw new InvestigationReceiverBpnMismatchException(builder.toString());
+		}
+
 
 		switch (status) {
-			case ACKNOWLEDGED -> investigation.acknowledge(bpn);
-			case ACCEPTED -> investigation.accept(bpn, reason);
-			case DECLINED -> investigation.decline(bpn, reason);
+			case ACKNOWLEDGED -> investigation.acknowledge(applicationBpn);
+			case ACCEPTED -> investigation.accept(applicationBpn, reason);
+			case DECLINED -> investigation.decline(applicationBpn, reason);
 			default -> throw new InvestigationIllegalUpdate("Can't update %s investigation with %s status".formatted(investigationIdRaw, status));
 		}
 
 		repository.update(investigation);
 		investigation.getNotifications().forEach(notificationsService::updateAsync);
 	}
+
+	private List<Notification> invalidNotifications(final Investigation investigation, final BPN applicationBpn) {
+		final String applicationBpnValue = applicationBpn.value();
+		return investigation.getNotifications().stream()
+			.filter(notification -> !notification.getReceiverBpnNumber().equals(applicationBpnValue)).collect(Collectors.toList());
+	}
+
+
 }
