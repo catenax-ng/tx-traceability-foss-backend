@@ -281,8 +281,8 @@
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
         </dependency>
-        <!-- test related dependencies -->
 
+        <!-- test related dependencies -->
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -347,23 +347,14 @@
             <artifactId>postgresql</artifactId>
             <version>1.17.6</version>
         </dependency>
-        <!-- dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-bom</artifactId>
-            <version>2.2-M1-groovy-4.0</version>
-            <type>pom</type>
-        </dependency -->
+
         <dependency>
             <groupId>org.spockframework</groupId>
             <artifactId>spock-core</artifactId>
             <version>${spock.version}</version>
             <scope>test</scope>
         </dependency>
-        <!-- dependency>
-            <groupId>org.spockframework</groupId>
-            <artifactId>spock-spring</artifactId>
-            <version>2.4-M1-groovy-4.0</version>
-        </dependency -->
+
         <dependency>
             <groupId>io.rest-assured</groupId>
             <artifactId>rest-assured</artifactId>
@@ -503,23 +494,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco-plugin.version}</version>
-                <configuration>
-                  <!--  <excludes>
-                        <exclude>org/eclipse/tractusx/traceability/generated/**,
-                            org/eclipse/tractusx/traceability/openapi/**
-                        </exclude>
-                        <exclude>org/eclipse/tractusx/traceability/TraceabilityApplication.java</exclude>
-                        <exclude>
-                            org/eclipse/tractusx/traceability/common/**,org/eclipse/tractusx/traceability/infrastructure/**
-                        </exclude>
-                        <exclude>org/eclipse/tractusx/traceability/assets/domain/model/**</exclude>
-                        <exclude>org/eclipse/tractusx/traceability/assets/infrastructure/**</exclude>
-                        <exclude>org/eclipse/tractusx/traceability/assets/config/**</exclude>
-                        <exclude>org/eclipse/tractusx/traceability/investigations/domain/model/**</exclude>
-                        <exclude>org/eclipse/tractusx/traceability/investigations/adapters/**</exclude>
-                        <exclude>org/eclipse/tractusx/traceability/infrastructure/edc/blackbox/**</exclude>
-                    </excludes>-->
-                </configuration>
                 <executions>
                     <execution>
                         <id>prepare-agent</id>
