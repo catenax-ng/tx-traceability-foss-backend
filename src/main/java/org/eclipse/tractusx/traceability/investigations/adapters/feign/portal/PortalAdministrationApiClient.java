@@ -19,24 +19,21 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package org.eclipse.tractusx.traceability.common.config;
+package org.eclipse.tractusx.traceability.investigations.adapters.feign.portal;
 
-import org.springframework.core.env.Environment;
+import feign.RequestLine;
+import org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi.CatenaApiConfig;
+import org.springframework.cloud.openfeign.FeignClient;
 
-import java.util.Arrays;
+import java.util.List;
 
-public class ApplicationProfiles {
+@FeignClient(
+	name = "portalApi",
+	url = "${feign.portalApi.url}",
+	configuration = {CatenaApiConfig.class}
+)
+public interface PortalAdministrationApiClient {
 
-	public static final String TESTS = "integration";
-	public static final String NOT_TESTS = "!" + TESTS;
-	public static final String DEV = "dev";
-	public static final String INT = "int";
-
-	private ApplicationProfiles() {
-	}
-
-	public static boolean doesNotContainTestProfile(Environment environment) {
-		return Arrays.stream(environment.getActiveProfiles())
-			.noneMatch(profile -> profile.equals(TESTS));
-	}
+	@RequestLine("POST /administration/connectors/discovery")
+	List<ConnectorDiscoveryMappingResponse> getConnectorEndpointMappings(List<String> bpns);
 }

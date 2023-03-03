@@ -18,34 +18,27 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
-package org.eclipse.tractusx.traceability.investigations.adapters.feign;
 
-import java.util.List;
+package org.eclipse.tractusx.traceability.common.support
 
-public class GetSdHubResponse {
+import org.springframework.http.HttpHeaders
 
-	private String id;
-	private List<VerifiableCredential> verifiableCredential;
+import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp
+import static com.xebialabs.restito.semantics.Action.header
+import static com.xebialabs.restito.semantics.Action.ok
+import static com.xebialabs.restito.semantics.Condition.post
+import static com.xebialabs.restito.semantics.Condition.withHeader
 
-	public String getId() {
-		return id;
-	}
+trait PortalApiSupport implements RestitoProvider {
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public List<VerifiableCredential> getVerifiableCredential() {
-		return verifiableCredential;
-	}
-
-	public void setVerifiableCredential(List<VerifiableCredential> verifiableCredential) {
-		this.verifiableCredential = verifiableCredential;
-	}
-
-	public record VerifiableCredential(String id, List<String> type, CredentialSubject credentialSubject) {
-	}
-
-	public record CredentialSubject(String bpn, String service_provider) {
+	void portalAdministrationReturnsRegisteredConnectorEndpoints() {
+		whenHttp(stubServer()).match(
+			post("/administration/connectors/discovery"),
+			withHeader(HttpHeaders.AUTHORIZATION)
+		).then(
+			ok(),
+			header("Content-Type", "application/json"),
+			jsonResponseFromFile("./stubs/portal/post/administration/connectors/discovery/response_200.json")
+		)
 	}
 }

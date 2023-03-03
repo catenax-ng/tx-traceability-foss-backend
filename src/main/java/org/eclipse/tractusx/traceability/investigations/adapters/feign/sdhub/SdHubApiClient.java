@@ -19,24 +19,30 @@
  * SPDX-License-Identifier: Apache-2.0
  ********************************************************************************/
 
-package org.eclipse.tractusx.traceability.common.config;
+package org.eclipse.tractusx.traceability.investigations.adapters.feign.sdhub;
 
-import org.springframework.core.env.Environment;
+import feign.Param;
+import feign.RequestLine;
+import org.eclipse.tractusx.traceability.assets.infrastructure.config.openapi.CatenaApiConfig;
+import org.springframework.cloud.openfeign.FeignClient;
 
-import java.util.Arrays;
+import java.util.List;
 
-public class ApplicationProfiles {
+@FeignClient(
+	name = "sdHubApi",
+	url = "${feign.sdHubApi.url}",
+	configuration = {CatenaApiConfig.class}
+)
+public interface SdHubApiClient {
 
-	public static final String TESTS = "integration";
-	public static final String NOT_TESTS = "!" + TESTS;
-	public static final String DEV = "dev";
-	public static final String INT = "int";
-
-	private ApplicationProfiles() {
-	}
-
-	public static boolean doesNotContainTestProfile(Environment environment) {
-		return Arrays.stream(environment.getActiveProfiles())
-			.noneMatch(profile -> profile.equals(TESTS));
-	}
+	@RequestLine("GET /selfdescription/by-params")
+	GetSdHubResponse getSelfDescriptions(
+		@Param(value = "id") List<String> ids,
+		@Param(value = "companyNumbers") List<String> companyNumbers,
+		@Param(value = "headquarterCountries") List<String> headquarterCountries,
+		@Param(value = "legalCountries") List<String> legalCountries,
+		@Param(value = "serviceProviders") List<String> serviceProviders,
+		@Param(value = "sdTypes") List<String> sdTypes,
+		@Param(value = "bpns") List<String> bpns
+	);
 }
