@@ -165,6 +165,8 @@ public class Investigation {
 		validateBPN(applicationBpn);
 		changeStatusTo(InvestigationStatus.CLOSED);
 		this.closeReason = reason;
+		this.notifications.values()
+			.forEach(notification -> notification.setDescription(reason));
 	}
 
 	public void send(BPN applicationBpn) {
@@ -172,16 +174,16 @@ public class Investigation {
 		changeStatusTo(InvestigationStatus.SENT);
 	}
 
-	public void acknowledge(BPN applicationBpn) {
+	public void acknowledge() {
 		changeStatusTo(InvestigationStatus.ACKNOWLEDGED);
 	}
 
-	public void accept(BPN applicationBpn, String reason) {
+	public void accept(String reason) {
 		changeStatusTo(InvestigationStatus.ACCEPTED);
 		this.acceptReason = reason;
 	}
 
-	public void decline(BPN applicationBpn, String reason) {
+	public void decline(String reason) {
 		changeStatusTo(InvestigationStatus.DECLINED);
 		this.declineReason = reason;
 	}
@@ -193,14 +195,14 @@ public class Investigation {
 	}
 
 	private void changeStatusTo(InvestigationStatus to) {
-		notifications.values()
-			.forEach(notification -> notification.changeStatusTo(to));
-
 		boolean transitionAllowed = investigationStatus.transitionAllowed(to);
 
 		if (!transitionAllowed) {
 			throw new InvestigationStatusTransitionNotAllowed(investigationId, investigationStatus, to);
 		}
+
+		notifications.values()
+			.forEach(notification -> notification.changeStatusTo(to));
 
 		this.investigationStatus = to;
 	}
