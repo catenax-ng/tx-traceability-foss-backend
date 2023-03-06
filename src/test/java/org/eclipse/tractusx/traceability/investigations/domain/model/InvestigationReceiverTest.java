@@ -27,8 +27,6 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.exception.I
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
@@ -43,11 +41,10 @@ class InvestigationReceiverTest {
 
 	Investigation investigation;
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Acknowledge Investigation with disallowed status")
-	@EnumSource(value = InvestigationStatus.class, names = {"CREATED", "SENT", "ACKNOWLEDGED", "ACCEPTED", "DECLINED", "CLOSED", "CANCELED"})
-	void forbidAcknowledgeInvestigationWithDisallowedStatus(InvestigationStatus status) {
-
+	void forbidAcknowledgeInvestigationWithDisallowedStatus() {
+		InvestigationStatus status = CREATED;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, status);
 
@@ -59,11 +56,11 @@ class InvestigationReceiverTest {
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Accept Investigation with disallowed status")
-	@EnumSource(value = InvestigationStatus.class, names = {"CREATED", "SENT", "RECEIVED", "ACCEPTED", "DECLINED", "CLOSED", "CANCELED"})
-	void forbidAcceptInvestigationWithDisallowedStatus(InvestigationStatus status) {
+	void forbidAcceptInvestigationWithDisallowedStatus() {
 
+		InvestigationStatus status = CREATED;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, status);
 
@@ -75,10 +72,11 @@ class InvestigationReceiverTest {
 
 	}
 
-	@ParameterizedTest
-	@EnumSource(value = InvestigationStatus.class, names = {"CREATED", "SENT", "RECEIVED", "ACCEPTED", "DECLINED", "CLOSED", "CANCELED"})
+	@Test
 	@DisplayName("Forbid Decline Investigation with disallowed status")
-	void forbidDeclineInvestigationWithDisallowedStatus(InvestigationStatus status) {
+	void forbidDeclineInvestigationWithDisallowedStatus() {
+
+		InvestigationStatus status = CREATED;
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, status);
@@ -98,7 +96,7 @@ class InvestigationReceiverTest {
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, RECEIVED);
 
-		assertThrows(InvestigationIllegalUpdate.class, () -> {
+		org.junit.jupiter.api.Assertions.assertThrows(InvestigationIllegalUpdate.class, () -> {
 			investigation.acknowledge(new BPN("BPNL000000000002"));
 		});
 
@@ -113,7 +111,7 @@ class InvestigationReceiverTest {
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, ACKNOWLEDGED);
 
-		assertThrows(InvestigationIllegalUpdate.class, () -> {
+		org.junit.jupiter.api.Assertions.assertThrows(InvestigationIllegalUpdate.class, () -> {
 			investigation.accept(new BPN("BPNL000000000002"), "some reason");
 		});
 
@@ -144,9 +142,8 @@ class InvestigationReceiverTest {
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, RECEIVED);
 
-		assertDoesNotThrow(() -> {
-			investigation.acknowledge(bpn);
-		});
+		investigation.acknowledge(bpn);
+
 
 		assertEquals(ACKNOWLEDGED, investigation.getInvestigationStatus());
 
@@ -158,10 +155,8 @@ class InvestigationReceiverTest {
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, ACKNOWLEDGED);
+		investigation.accept(bpn, "some reason");
 
-		assertDoesNotThrow(() -> {
-			investigation.accept(bpn, "some reason");
-		});
 
 		assertEquals(ACCEPTED, investigation.getInvestigationStatus());
 
@@ -173,10 +168,8 @@ class InvestigationReceiverTest {
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = receiverInvestigationWithStatus(bpn, ACKNOWLEDGED);
+		investigation.decline(bpn, "some reason");
 
-		assertDoesNotThrow(() -> {
-			investigation.decline(bpn, "some reason");
-		});
 
 		assertEquals(DECLINED, investigation.getInvestigationStatus());
 

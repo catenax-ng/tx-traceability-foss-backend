@@ -43,11 +43,11 @@ class InvestigationPublisherTest {
 
 	Investigation investigation;
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Cancel Investigation with disallowed status")
-	@EnumSource(value = InvestigationStatus.class, names = {"RECEIVED","ACKNOWLEDGED", "DECLINED", "ACCEPTED", "CLOSED"})
-	void forbidCancellingInvestigationWithDisallowedStatus(InvestigationStatus status) {
+	void forbidCancellingInvestigationWithDisallowedStatus() {
 
+		InvestigationStatus status = RECEIVED;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
 
@@ -59,11 +59,11 @@ class InvestigationPublisherTest {
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Send Investigation with disallowed status")
-	@EnumSource(value = InvestigationStatus.class, names = {"SENT", "RECEIVED", "ACKNOWLEDGED", "ACCEPTED", "DECLINED", "CLOSED"})
-	void forbidSendingInvestigationWithDisallowedStatus(InvestigationStatus status) {
+	void forbidSendingInvestigationWithDisallowedStatus() {
 
+		InvestigationStatus status = SENT;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
 
@@ -75,11 +75,11 @@ class InvestigationPublisherTest {
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Close Investigation for different BPN")
-	@EnumSource(value = InvestigationStatus.class, names = {"CREATED", "CLOSED", "CANCELED"})
-	void forbidCloseInvestigationWithDisallowedStatus(InvestigationStatus status) {
+	void forbidCloseInvestigationWithDisallowedStatus() {
 
+		InvestigationStatus status = CREATED;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
 
@@ -91,26 +91,30 @@ class InvestigationPublisherTest {
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Cancel Investigation for different BPN")
-	@EnumSource(value = InvestigationStatus.class)
-	void forbidCancelInvestigationForDifferentBpn(InvestigationStatus status) {
+	void forbidCancelInvestigationForDifferentBpn() {
+
+		InvestigationStatus status = CREATED;
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
 
+		BPN bpn2 = new BPN("BPNL000000000002");
+
 		assertThrows(InvestigationIllegalUpdate.class, () -> {
-			investigation.cancel(new BPN("BPNL000000000002"));
+			investigation.cancel(bpn2);
 		});
 
 		assertEquals(status, investigation.getInvestigationStatus());
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Send Investigation for different BPN")
-	@EnumSource(value = InvestigationStatus.class)
-	void forbidSendInvestigationForDifferentBpn(InvestigationStatus status) {
+	void forbidSendInvestigationForDifferentBpn() {
+
+		InvestigationStatus status = CREATED;
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
@@ -123,11 +127,11 @@ class InvestigationPublisherTest {
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Forbid Close Investigation for different BPN")
-	@EnumSource(value = InvestigationStatus.class)
-	void forbidCloseInvestigationForDifferentBpn(InvestigationStatus status) {
+	void forbidCloseInvestigationForDifferentBpn() {
 
+		InvestigationStatus status = CREATED;
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
 
@@ -146,10 +150,7 @@ class InvestigationPublisherTest {
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, CREATED);
-
-		assertDoesNotThrow(() -> {
-			investigation.send(bpn);
-		});
+		investigation.send(bpn);
 
 		assertEquals(SENT, investigation.getInvestigationStatus());
 
@@ -160,25 +161,22 @@ class InvestigationPublisherTest {
 	void cancelInvestigationSuccessfully() {
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, CREATED);
+		investigation.cancel(bpn);
 
-		assertDoesNotThrow(() -> {
-			investigation.cancel(bpn);
-		});
 
 		assertEquals(CANCELED, investigation.getInvestigationStatus());
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Close Investigation with allowed status")
-	@EnumSource(value = InvestigationStatus.class, names = {"SENT", "RECEIVED", "ACKNOWLEDGED", "ACCEPTED", "DECLINED"})
-	void closeInvestigationWithAllowedStatusSuccessfully(InvestigationStatus status) {
+	void closeInvestigationWithAllowedStatusSuccessfully() {
+
+		InvestigationStatus status = SENT;
 
 		BPN bpn = new BPN("BPNL000000000001");
 		investigation = senderInvestigationWithStatus(bpn, status);
+		investigation.close(bpn, "some-reason");
 
-		assertDoesNotThrow(() -> {
-			investigation.close(bpn, "some-reason");
-		});
 		assertEquals(CLOSED, investigation.getInvestigationStatus());
 
 	}

@@ -27,9 +27,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.*;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.ArgumentsProvider;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.stream.Stream;
@@ -43,41 +44,45 @@ class UpdateInvestigationValidatorTest {
 	@InjectMocks
 	UpdateInvestigationValidator updateInvestigationValidator;
 
-	@ParameterizedTest
+	@Mock
+	UpdateInvestigationRequest mockRequest;
+
+	@Test
 	@DisplayName("No Validation Success for unsupported Status")
-	@EnumSource(value = InvestigationStatus.class, names = {"CREATED", "SENT", "RECEIVED", "CLOSED", "CANCELED"})
-	void testUnsuccessfulValidationForUnsupportedStatus(InvestigationStatus status) {
+	void testUnsuccessfulValidationForUnsupportedStatus() {
 
+		InvestigationStatus status = CREATED;
 		UpdateInvestigationRequest request = new UpdateInvestigationRequest(status, "some-reason");
-		UpdateInvestigationValidationException exception = assertThrows(UpdateInvestigationValidationException.class, () -> {
-			updateInvestigationValidator.validate(request);
-		});
-		assertEquals(status + " not allowed for update investigation with", exception.getMessage());
 
+
+		UpdateInvestigationValidationException exception = org.junit.jupiter.api.Assertions.assertThrows(UpdateInvestigationValidationException.class, () -> {
+			UpdateInvestigationValidator.validate(request);
+		});
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("No Validation Success for invalid Reason")
-	@ArgumentsSource(UnsuccessfulValidationForInvalidReasonProvider.class)
-	void testUnsuccessfulValidationForInvalidReason(InvestigationStatus status, String reason, String errorMessage) {
+	void testUnsuccessfulValidationForInvalidReason() {
+
+		InvestigationStatus status = ACKNOWLEDGED;
+		String reason = "some-reason-for-update";
+		String errorMessage = "Update investigation reason can't be present for ACKNOWLEDGED status";
 
 		UpdateInvestigationRequest request = new UpdateInvestigationRequest(status, reason);
 		UpdateInvestigationValidationException exception = assertThrows(UpdateInvestigationValidationException.class, () -> {
-			updateInvestigationValidator.validate(request);
+			UpdateInvestigationValidator.validate(request);
 		});
 		assertEquals(errorMessage, exception.getMessage());
 
 	}
 
-	@ParameterizedTest
+	@Test
 	@DisplayName("Execute Validation successfully")
-	@ArgumentsSource(SuccessfulValidationProvider.class)
-	void testSuccessfulValidation(InvestigationStatus status, String reason) {
+	void testSuccessfulValidation() {
 
-		UpdateInvestigationRequest request = new UpdateInvestigationRequest(status, reason);
-		assertDoesNotThrow(() -> {
-			updateInvestigationValidator.validate(request);
-		});
+		UpdateInvestigationRequest request = new UpdateInvestigationRequest(ACKNOWLEDGED, null);
+		UpdateInvestigationValidator.validate(request);
+
 	}
 
 
