@@ -7,7 +7,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ## [2.0.0] - 2023-03-06
+
+### Added
 - Added functionality to close notifications – Quality Investigations
+
+### Changed
 - Fixed Sending and saving quality investigation closure reason
 
 ## [1.1.0] - 2023-03-02
