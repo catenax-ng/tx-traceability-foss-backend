@@ -1,5 +1,7 @@
 package org.eclipse.tractusx.traceability.investigations.adapters;
 
+import feign.FeignException;
+import feign.Request;
 import org.eclipse.tractusx.traceability.infrastructure.edc.properties.EdcProperties;
 import org.eclipse.tractusx.traceability.investigations.adapters.feign.portal.ConnectorDiscoveryMappingResponse;
 import org.eclipse.tractusx.traceability.investigations.adapters.feign.portal.PortalAdministrationApiClient;
@@ -70,7 +72,7 @@ public class EDCUrlProviderDispatcherTest {
 	}
 
 	@Test
-	void testEdcUrlProviderDispatcherGetEdcUrlsFromFallbackMapping() {
+	void testEdcUrlProviderDispatcherGetEdcUrlsFromFallbackMappingOnServiceUnavailable() {
 		// given
 		String bpn = "BPN1234";
 		String connectorEndpoint = "https://some-edc-url.com";
@@ -79,7 +81,25 @@ public class EDCUrlProviderDispatcherTest {
 
 		// and
 		when(portalAdministrationApiClient.getConnectorEndpointMappings(List.of(bpn)))
-			.thenThrow(new RuntimeException("unit-tests"));
+			.thenThrow(serviceUnavailable());
+
+		// when
+		List<String> edcUrls = edcUrlProviderDispatcher.getEdcUrls(bpn);
+
+		// then
+		assertThat(edcUrls).isEqualTo(List.of(connectorEndpoint));
+	}
+
+	@Test
+	void testEdcUrlProviderDispatcherGetEdcUrlsFromFallbackMappingOnNullResponse() {
+		// given
+		String bpn = "BPN1234";
+		String connectorEndpoint = "https://some-edc-url.com";
+
+		when(edcProperties.getBpnProviderUrlMappings()).thenReturn(Map.of(bpn, connectorEndpoint));
+
+		// and
+		when(portalAdministrationApiClient.getConnectorEndpointMappings(List.of(bpn))).thenReturn(null);
 
 		// when
 		List<String> edcUrls = edcUrlProviderDispatcher.getEdcUrls(bpn);
@@ -102,5 +122,12 @@ public class EDCUrlProviderDispatcherTest {
 
 		// then
 		assertThat(edcUrls).isEqualTo(List.of("https://trace-x-test-edc.test.demo.catena-x.net"));
+	}
+
+	private FeignException.ServiceUnavailable serviceUnavailable() {
+		return new FeignException.ServiceUnavailable(
+			"unit-tests",
+			Request.create(Request.HttpMethod.POST, "", Map.of(), new byte[]{}, null, null),
+			null, null);
 	}
 }
