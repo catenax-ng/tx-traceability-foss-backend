@@ -22,7 +22,6 @@
 package org.eclipse.tractusx.traceability.investigations.adapters;
 
 import org.eclipse.tractusx.traceability.common.config.ApplicationProfiles;
-import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
 import org.eclipse.tractusx.traceability.infrastructure.edc.properties.EdcProperties;
 import org.eclipse.tractusx.traceability.investigations.adapters.feign.portal.DataspaceDiscoveryService;
 import org.eclipse.tractusx.traceability.investigations.adapters.feign.portal.PortalAdministrationApiClient;
@@ -45,17 +44,20 @@ public class EDCUrlProviderDispatcher implements EDCUrlProvider {
 
 	private final EnvironmentAwareMockEDCUrlProvider environmentAwareMockEDCUrlProvider;
 
-	private final TraceabilityProperties traceabilityProperties;
+	private final EdcProperties edcProperties;
 
-	public EDCUrlProviderDispatcher(PortalAdministrationApiClient portalAdministrationApiClient, Environment environment, TraceabilityProperties traceabilityProperties, EdcProperties edcProperties) {
-		this.traceabilityProperties = traceabilityProperties;
-		this.dataspaceDiscoveryService = new DataspaceDiscoveryService(traceabilityProperties, portalAdministrationApiClient);
+	public EDCUrlProviderDispatcher(PortalAdministrationApiClient portalAdministrationApiClient,
+									Environment environment,
+									EdcProperties edcProperties) {
+		this.dataspaceDiscoveryService = new DataspaceDiscoveryService(portalAdministrationApiClient, edcProperties);
 
 		if (ApplicationProfiles.doesNotContainTestProfile(environment)) {
 			this.environmentAwareMockEDCUrlProvider = new EnvironmentAwareMockEDCUrlProvider(environment, edcProperties);
 		} else {
 			this.environmentAwareMockEDCUrlProvider = null;
 		}
+
+		this.edcProperties = edcProperties;
 	}
 
 	@Override
@@ -63,7 +65,7 @@ public class EDCUrlProviderDispatcher implements EDCUrlProvider {
 		final List<String> edcUrls;
 
 		try {
-			 edcUrls = dataspaceDiscoveryService.getEdcUrls(bpn);
+			edcUrls = dataspaceDiscoveryService.getEdcUrls(bpn);
 		} catch (Exception e) {
 			logger.warn("Exception during fetching edc urls for {} bpn. Using fallback method if available", bpn);
 
@@ -91,10 +93,6 @@ public class EDCUrlProviderDispatcher implements EDCUrlProvider {
 
 	@Override
 	public String getSenderUrl() {
-		String senderBpn = traceabilityProperties.getBpn().value();
-
-		return getEdcUrls(senderBpn).stream()
-			.findFirst()
-			.orElseThrow(() -> new IllegalStateException("No edc url found for %s sender bpn".formatted(senderBpn)));
+		return edcProperties.getProviderEdcUrl();
 	}
 }

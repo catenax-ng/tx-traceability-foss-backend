@@ -22,7 +22,7 @@
 package org.eclipse.tractusx.traceability.investigations.adapters.feign.portal;
 
 import feign.FeignException;
-import org.eclipse.tractusx.traceability.common.properties.TraceabilityProperties;
+import org.eclipse.tractusx.traceability.infrastructure.edc.properties.EdcProperties;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.EDCUrlProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +35,13 @@ public class DataspaceDiscoveryService implements EDCUrlProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataspaceDiscoveryService.class);
 
-	private final TraceabilityProperties traceabilityProperties;
-
 	private final PortalAdministrationApiClient portalAdministrationApiClient;
 
-	public DataspaceDiscoveryService(TraceabilityProperties traceabilityProperties, PortalAdministrationApiClient portalAdministrationApiClient) {
-		this.traceabilityProperties = traceabilityProperties;
+	private final EdcProperties edcProperties;
+
+	public DataspaceDiscoveryService(PortalAdministrationApiClient portalAdministrationApiClient, EdcProperties edcProperties) {
 		this.portalAdministrationApiClient = portalAdministrationApiClient;
+		this.edcProperties = edcProperties;
 	}
 
 	@Override
@@ -71,11 +71,6 @@ public class DataspaceDiscoveryService implements EDCUrlProvider {
 
 	@Override
 	public String getSenderUrl() {
-		String senderBpn = traceabilityProperties.getBpn().value();
-
-		return getEdcUrls(senderBpn).stream()
-			.findFirst()
-			.orElseThrow(() -> new IllegalStateException("No edc url found for %s sender bpn".formatted(senderBpn)));
-
+		return edcProperties.getProviderEdcUrl();
 	}
 }
