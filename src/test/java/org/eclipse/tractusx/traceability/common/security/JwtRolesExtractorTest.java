@@ -35,6 +35,7 @@ class JwtRolesExtractorTest {
 	@Test
 	@DisplayName("Extract Only Mapped Jwt Roles successfully")
 	void testExtractOnlyMappedJwtRoles() {
+
 		// given
 		String resourceClient = "unit-tests";
 		Set<JwtRole> roles = Set.of(JwtRole.USER, JwtRole.ADMIN);

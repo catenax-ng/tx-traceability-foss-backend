@@ -42,8 +42,8 @@ class EdcServiceTest {
 		properties.put(PROPERTY_DESCRIPTION, "This is a description of my asset.");
 		properties.put(PROPERTY_VERSION, 1.0);
 		properties.put(PROPERTY_CONTENT_TYPE, "image/jpeg");
-		properties.put(PROPERTY_NOTIFICATION_METHOD, "qualityinvestigation");
-		properties.put(PROPERTY_NOTIFICATION_TYPE, "update");
+		properties.put(PROPERTY_NOTIFICATION_TYPE, "qualityinvestigation");
+		properties.put(PROPERTY_NOTIFICATION_METHOD, "update");
 
 		Policy policy = Policy.Builder.newInstance().build();
 		Asset asset = Builder.newInstance().properties(properties).build();
@@ -71,8 +71,9 @@ class EdcServiceTest {
 		properties.put(PROPERTY_DESCRIPTION, "This is a description of my asset.");
 		properties.put(PROPERTY_VERSION, 1.0);
 		properties.put(PROPERTY_CONTENT_TYPE, "image/jpeg");
-		properties.put(PROPERTY_NOTIFICATION_METHOD, "qualityinvestigation");
-		properties.put(PROPERTY_NOTIFICATION_TYPE, "receive");
+		properties.put(PROPERTY_NOTIFICATION_TYPE, "qualityinvestigation");
+		properties.put(PROPERTY_NOTIFICATION_METHOD, "receive");
+
 
 		Policy policy = Policy.Builder.newInstance().build();
 		Asset asset = Builder.newInstance().properties(properties).build();
