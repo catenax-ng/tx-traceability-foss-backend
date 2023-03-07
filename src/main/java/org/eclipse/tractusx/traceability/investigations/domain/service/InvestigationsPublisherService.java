@@ -76,7 +76,7 @@ public class InvestigationsPublisherService {
 				null,
 				description,
 				InvestigationStatus.RECEIVED,
-				it.getValue().stream().map(Asset::getId).map(AffectedPart::new).collect(Collectors.toList()),
+				it.getValue().stream().map(Asset::getId).map(AffectedPart::new).toList(),
 				targetDate
 			)).forEach(investigation::addNotification);
 
