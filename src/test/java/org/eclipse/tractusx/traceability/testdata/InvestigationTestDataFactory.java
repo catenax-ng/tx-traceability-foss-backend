@@ -26,7 +26,8 @@ public class InvestigationTestDataFactory {
 			"agreement",
 			"Test Notification",
 			notificationInvestigationStatus,
-			List.of(new AffectedPart("part123"))
+			List.of(new AffectedPart("part123")),
+			Instant.now()
 		));
 
 		return new Investigation(

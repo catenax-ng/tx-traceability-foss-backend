@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +48,9 @@ class InvestigationsPublisherServiceTest {
 		when(repository.save(any(Investigation.class))).thenReturn(investigation.getId());
 
 		// When
-		investigationsPublisherService.startInvestigation(BPN.of("bpn-123"), Arrays.asList("asset-1", "asset-2"), "Test investigation");
+		investigationsPublisherService.startInvestigation(BPN.of("bpn-123"),
+			Arrays.asList("asset-1", "asset-2"), "Test investigation",
+			Instant.parse("2022-03-01T12:00:00Z"));
 
 		// Then
 		verify(assetRepository).getAssetsById(Arrays.asList("asset-1", "asset-2"));
