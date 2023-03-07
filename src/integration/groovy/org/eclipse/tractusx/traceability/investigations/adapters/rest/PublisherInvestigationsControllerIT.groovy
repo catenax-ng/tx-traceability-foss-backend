@@ -38,7 +38,7 @@ import spock.lang.Unroll
 import static io.restassured.RestAssured.given
 import static org.eclipse.tractusx.traceability.common.security.JwtRole.ADMIN
 
-@Ignore
+
 class PublisherInvestigationsControllerIT extends IntegrationSpecification implements IrsApiSupport, AssetsSupport, InvestigationsSupport, NotificationsSupport, BpnSupport {
 
 	def "should start investigation"() {
