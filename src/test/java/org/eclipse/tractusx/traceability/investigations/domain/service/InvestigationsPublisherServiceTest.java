@@ -6,6 +6,7 @@ import org.eclipse.tractusx.traceability.investigations.domain.model.Investigati
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationId;
 import org.eclipse.tractusx.traceability.investigations.domain.model.InvestigationStatus;
 import org.eclipse.tractusx.traceability.investigations.domain.ports.InvestigationsRepository;
+
 import org.eclipse.tractusx.traceability.testdata.AssetTestDataFactory;
 import org.eclipse.tractusx.traceability.testdata.InvestigationTestDataFactory;
 import org.junit.jupiter.api.Test;
