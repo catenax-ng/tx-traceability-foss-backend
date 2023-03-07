@@ -37,7 +37,7 @@ public class Notification {
 	private String edcUrl;
 	private String contractAgreementId;
 	private final List<AffectedPart> affectedParts;
-	private final String description;
+	private String description;
 	private InvestigationStatus investigationStatus;
 
 	private Instant targetDate;
@@ -112,6 +112,10 @@ public class Notification {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 	public InvestigationStatus getInvestigationStatus() {
