@@ -126,4 +126,19 @@ public class Notification {
 		return this.targetDate;
 	}
 
+
+	public Notification copy() {
+		return new Notification(
+			id,
+			notificationReferenceId,
+			senderBpnNumber,
+			receiverBpnNumber,
+			edcUrl,
+			contractAgreementId,
+			description,
+			investigationStatus,
+			affectedParts,
+			Instant.now()
+		);
+	}
 }
