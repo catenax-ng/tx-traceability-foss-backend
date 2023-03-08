@@ -77,15 +77,6 @@ public class EdcService {
 			throw new BadRequestException("Provider has no contract offers for us. Catalog is empty.");
 		}
 		logger.info(":::: Find Notification contract method[findNotificationContractOffer] total catalog ::{}", catalog.getContractOffers().size());
-		catalog.getContractOffers().forEach(contractOffer -> {
-			try {
-				String valueAsString = objectMapper.writeValueAsString(contractOffer);
-				logger.info(":::: Contract offer {}", valueAsString);
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-
-		});
 
 		return catalog.getContractOffers().stream()
 			.filter(it -> isPropertyQualityInvestigationType(it.getAsset()) && isPropertyUpdateNotificationMethod(it.getAsset())).findAny();
