@@ -273,7 +273,8 @@ class EdcControllerIT extends IntegrationSpecification implements TestDataSuppor
 			"senderBpnNumber",
 			"receiverBpnNumber",
 			null,
-			"notificationReferenceId"
+			"notificationReferenceId",
+			Instant.now()
 		)
 		notification.setEdcUrl("http://example.com")
 		notification.setContractAgreementId("contractAgreementId")
